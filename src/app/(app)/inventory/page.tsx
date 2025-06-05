@@ -11,11 +11,14 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { AddInventoryItemForm } from "@/components/inventory/AddInventoryItemForm";
 import { InventoryPredictionForm } from "@/components/inventory/InventoryPredictionForm";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface InventoryItem {
   id: string;
@@ -36,6 +39,9 @@ const initialInventoryItems: InventoryItem[] = [
 export default function InventoryPage() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>(initialInventoryItems);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isStockDialogOpen, setIsStockDialogOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
+  const [stockQuantity, setStockQuantity] = useState(1);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const { toast } = useToast();
 
@@ -56,7 +62,7 @@ export default function InventoryPage() {
     setInventoryItems(inventoryItems.filter(item => item.id !== itemId));
     toast({ title: "Item Deleted", description: "The inventory item has been deleted.", variant: "destructive" });
   };
-  
+
   const handleEdit = (item: InventoryItem) => {
     setEditingItem(item);
     setIsFormOpen(true);
@@ -65,6 +71,28 @@ export default function InventoryPage() {
   const handleAddNew = () => {
     setEditingItem(null);
     setIsFormOpen(true);
+  };
+
+  const handleAddStock = (item: InventoryItem) => {
+    setSelectedItem(item);
+    setStockQuantity(1);
+    setIsStockDialogOpen(true);
+  };
+
+  const handleStockUpdate = () => {
+    if (selectedItem && stockQuantity > 0) {
+      setInventoryItems(inventoryItems.map(item =>
+        item.id === selectedItem.id
+          ? { ...item, quantity: item.quantity + stockQuantity }
+          : item
+      ));
+      toast({
+        title: "Stock Updated",
+        description: `Added ${stockQuantity} ${selectedItem.unit} of ${selectedItem.itemName} to inventory.`
+      });
+      setIsStockDialogOpen(false);
+      setSelectedItem(null);
+    }
   };
 
   return (
@@ -84,11 +112,38 @@ export default function InventoryPage() {
               {editingItem ? "Update the details of the inventory item." : "Fill in the details to add a new item to inventory."}
             </DialogDescription>
           </DialogHeader>
-          <AddInventoryItemForm 
-            onSubmit={handleSubmit} 
+          <AddInventoryItemForm
+            onSubmit={handleSubmit}
             defaultValues={editingItem || {}}
             onClose={() => setIsFormOpen(false)}
           />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isStockDialogOpen} onOpenChange={setIsStockDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="font-headline">Add Stock</DialogTitle>
+            <DialogDescription>
+              Add stock to {selectedItem?.itemName}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="quantity">Quantity to Add</Label>
+              <Input
+                id="quantity"
+                type="number"
+                min="1"
+                value={stockQuantity}
+                onChange={(e) => setStockQuantity(parseInt(e.target.value) || 0)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsStockDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleStockUpdate}>Add Stock</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -130,7 +185,12 @@ export default function InventoryPage() {
                       <Button variant="outline" size="icon" onClick={() => handleEdit(item)} aria-label="Edit Item">
                         <Edit className="h-4 w-4" />
                       </Button>
-                       <Button variant="outline" size="icon" aria-label="Add Stock (placeholder)">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleAddStock(item)}
+                        aria-label="Add Stock"
+                      >
                         <PackagePlus className="h-4 w-4" />
                       </Button>
                       <Button variant="destructive" size="icon" onClick={() => handleDelete(item.id)} aria-label="Delete Item">

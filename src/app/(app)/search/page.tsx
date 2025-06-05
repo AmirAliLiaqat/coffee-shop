@@ -1,11 +1,11 @@
-
 "use client";
 
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search } from "lucide-react";
+import { Suspense } from "react";
 
-export default function SearchPage() {
+function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
 
@@ -52,5 +52,30 @@ export default function SearchPage() {
         </Card>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center gap-2">
+          <Search className="h-6 w-6" />
+          <h1 className="text-3xl font-bold font-headline">
+            Search Results
+          </h1>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Loading...</CardTitle>
+            <CardDescription>
+              Please wait while we load your search results.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    }>
+      <SearchResults />
+    </Suspense>
   );
 }

@@ -1,4 +1,8 @@
 import { ShopInfoForm } from "@/components/settings/ShopInfoForm";
+import { TaxAndChargesForm } from "@/components/settings/TaxAndChargesForm";
+import { ReceiptFormatForm } from "@/components/settings/ReceiptFormatForm";
+import { NotificationsForm } from "@/components/settings/NotificationsForm";
+import { UserRolesForm } from "@/components/settings/UserRolesForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Building, CreditCard, Receipt, Bell, ShieldCheck } from "lucide-react";
@@ -32,55 +36,19 @@ export default function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="tax" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline">Tax &amp; Charges Settings</CardTitle>
-              <CardDescription>Configure sales tax and other charges.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">Tax &amp; charges settings form will be here.</p>
-              {/* Placeholder for Tax &amp; Charges form */}
-            </CardContent>
-          </Card>
+          <TaxAndChargesForm />
         </TabsContent>
 
         <TabsContent value="receipt" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline">Receipt Format</CardTitle>
-              <CardDescription>Customize the appearance of customer receipts.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">Receipt format customization options will be here.</p>
-              {/* Placeholder for Receipt Format settings */}
-            </CardContent>
-          </Card>
+          <ReceiptFormatForm />
         </TabsContent>
 
         <TabsContent value="notifications" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline">Notification Settings</CardTitle>
-              <CardDescription>Manage your notification preferences.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">Notification settings form will be here.</p>
-              {/* Placeholder for Notification settings */}
-            </CardContent>
-          </Card>
+          <NotificationsForm />
         </TabsContent>
-        
+
         <TabsContent value="roles" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline">User Roles &amp; Permissions</CardTitle>
-              <CardDescription>Define roles and manage access permissions for your staff.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">User roles and permissions management interface will be here.</p>
-              {/* Placeholder for User Roles &amp; Permissions settings */}
-            </CardContent>
-          </Card>
+          <UserRolesForm />
         </TabsContent>
       </Tabs>
     </div>

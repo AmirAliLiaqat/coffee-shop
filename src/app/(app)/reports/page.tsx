@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Download, BarChart2, PieChart, Users, Package, Loader2 } from "lucide-react";
 import { DateRangePicker } from "@/components/reports/DateRangePicker";
 import type { DateRange } from "react-day-picker";
-import { ExampleChart } from "@/components/dashboard/ExampleChart"; // Reusing for demo
+import { ExampleChart } from "@/components/dashboard/ExampleChart";
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -22,6 +22,8 @@ export default function ReportsPage() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [salesPerItemData, setSalesPerItemData] = useState<ChartData[] | null>(null);
   const [revenueBreakdownData, setRevenueBreakdownData] = useState<ChartData[] | null>(null);
+  const [staffPerformanceData, setStaffPerformanceData] = useState<ChartData[] | null>(null);
+  const [inventoryUsageData, setInventoryUsageData] = useState<ChartData[] | null>(null);
 
   useEffect(() => {
     setSalesPerItemData([
@@ -38,6 +40,21 @@ export default function ReportsPage() {
       { source: "Food", amount: Math.floor(Math.random() * 1000) + 300 },
       { source: "Merchandise", amount: Math.floor(Math.random() * 300) + 50 },
     ]);
+
+    setStaffPerformanceData([
+      { item: "John", revenue: Math.floor(Math.random() * 1500) + 300 },
+      { item: "Sarah", revenue: Math.floor(Math.random() * 1500) + 300 },
+      { item: "Mike", revenue: Math.floor(Math.random() * 1500) + 300 },
+      { item: "Emma", revenue: Math.floor(Math.random() * 1500) + 300 },
+    ]);
+
+    setInventoryUsageData([
+      { item: "Coffee Beans", revenue: Math.floor(Math.random() * 1000) + 200 },
+      { item: "Milk", revenue: Math.floor(Math.random() * 800) + 150 },
+      { item: "Sugar", revenue: Math.floor(Math.random() * 500) + 100 },
+      { item: "Cups", revenue: Math.floor(Math.random() * 600) + 120 },
+      { item: "Syrups", revenue: Math.floor(Math.random() * 400) + 80 },
+    ]);
   }, []);
 
 
@@ -48,7 +65,7 @@ export default function ReportsPage() {
   };
 
   const exportToExcel = () => {
-    if (!salesPerItemData || !revenueBreakdownData) return;
+    if (!salesPerItemData || !revenueBreakdownData || !staffPerformanceData || !inventoryUsageData) return;
 
     // Create a new workbook
     const wb = XLSX.utils.book_new();
@@ -61,12 +78,20 @@ export default function ReportsPage() {
     const revenueWS = XLSX.utils.json_to_sheet(revenueBreakdownData);
     XLSX.utils.book_append_sheet(wb, revenueWS, "Revenue Breakdown");
 
+    // Convert staff performance data to worksheet
+    const staffWS = XLSX.utils.json_to_sheet(staffPerformanceData);
+    XLSX.utils.book_append_sheet(wb, staffWS, "Staff Performance");
+
+    // Convert inventory usage data to worksheet
+    const inventoryWS = XLSX.utils.json_to_sheet(inventoryUsageData);
+    XLSX.utils.book_append_sheet(wb, inventoryWS, "Inventory Usage");
+
     // Generate Excel file
     XLSX.writeFile(wb, "coffee_shop_reports.xlsx");
   };
 
   const exportToPDF = () => {
-    if (!salesPerItemData || !revenueBreakdownData) return;
+    if (!salesPerItemData || !revenueBreakdownData || !staffPerformanceData || !inventoryUsageData) return;
 
     const doc = new jsPDF();
 
@@ -99,6 +124,26 @@ export default function ReportsPage() {
       startY: (doc as any).lastAutoTable.finalY + 25,
       head: [['Source', 'Amount']],
       body: revenueData,
+    });
+
+    // Add Staff Performance table
+    doc.setFontSize(16);
+    doc.text("Staff Performance", 14, (doc as any).lastAutoTable.finalY + 20);
+    const staffData = staffPerformanceData.map(item => [item.item || '', item.revenue?.toString() || '']);
+    autoTable(doc, {
+      startY: (doc as any).lastAutoTable.finalY + 25,
+      head: [['Staff Member', 'Sales/Orders']],
+      body: staffData,
+    });
+
+    // Add Inventory Usage table
+    doc.setFontSize(16);
+    doc.text("Inventory Usage Reports", 14, (doc as any).lastAutoTable.finalY + 20);
+    const inventoryData = inventoryUsageData.map(item => [item.item || '', item.revenue?.toString() || '']);
+    autoTable(doc, {
+      startY: (doc as any).lastAutoTable.finalY + 25,
+      head: [['Item', 'Usage']],
+      body: inventoryData,
     });
 
     // Save the PDF
@@ -183,33 +228,24 @@ export default function ReportsPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="font-headline">Staff Performance</CardTitle>
-              <Users className="h-5 w-5 text-muted-foreground" />
-            </div>
-            <CardDescription>Sales or orders processed by each staff member.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">Staff performance data will be displayed here.</p>
-            {/* Placeholder for staff performance chart or table */}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="font-headline">Inventory Usage Reports</CardTitle>
-              <Package className="h-5 w-5 text-muted-foreground" />
-            </div>
-            <CardDescription>Track consumption of inventory items.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">Inventory usage reports will be displayed here.</p>
-            {/* Placeholder for inventory usage chart or table */}
-          </CardContent>
-        </Card>
+        {renderChart(
+          staffPerformanceData,
+          "Staff Performance",
+          "Sales or orders processed by each staff member.",
+          "item",
+          "revenue",
+          "hsl(var(--chart-6))",
+          Users
+        )}
+        {renderChart(
+          inventoryUsageData,
+          "Inventory Usage Reports",
+          "Track consumption of inventory items.",
+          "item",
+          "revenue",
+          "hsl(var(--chart-7))",
+          Package
+        )}
       </div>
     </div>
   );
