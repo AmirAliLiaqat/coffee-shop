@@ -1,0 +1,31 @@
+// This is a placeholder for logout functionality.
+// In a real app, this would handle session termination and redirect.
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { LogOut } from "lucide-react";
+
+export default function LogoutPage() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)]">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl font-headline text-center">Logging Out</CardTitle>
+          <CardDescription className="text-center">
+            You have been logged out.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center gap-4">
+          <LogOut className="h-16 w-16 text-primary" />
+          <p>Thank you for using BrewControl!</p>
+          <Button asChild>
+            <Link href="/dashboard">Return to Dashboard (Simulated)</Link>
+          </Button>
+          <p className="text-xs text-muted-foreground text-center mt-4">
+            In a real application, you would be redirected to a login page or public homepage.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

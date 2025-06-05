@@ -1,0 +1,151 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Edit, Trash2, PlusCircle, AlertTriangle, PackagePlus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { AddInventoryItemForm } from "@/components/inventory/AddInventoryItemForm";
+import { InventoryPredictionForm } from "@/components/inventory/InventoryPredictionForm";
+import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+
+interface InventoryItem {
+  id: string;
+  itemName: string;
+  quantity: number;
+  unit: string;
+  supplier?: string;
+  lowStockThreshold?: number;
+}
+
+const initialInventoryItems: InventoryItem[] = [
+  { id: "1", itemName: "Coffee Beans - Espresso Blend", quantity: 20, unit: "kg", supplier: "Pro Roasters", lowStockThreshold: 5 },
+  { id: "2", itemName: "Whole Milk", quantity: 15, unit: "liters", supplier: "Dairy Farm Co.", lowStockThreshold: 3 },
+  { id: "3", itemName: "Croissant Dough - Frozen", quantity: 50, unit: "units", supplier: "Bakery Supplies Inc.", lowStockThreshold: 10 },
+  { id: "4", itemName: "Sugar Syrup - Vanilla", quantity: 5, unit: "bottles", supplier: "Sweet Flavors Ltd.", lowStockThreshold: 1 },
+];
+
+export default function InventoryPage() {
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>(initialInventoryItems);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
+  const { toast } = useToast();
+
+  const handleSubmit = (values: any) => {
+    if (editingItem) {
+      setInventoryItems(inventoryItems.map(item => item.id === editingItem.id ? { ...item, ...values } : item));
+      toast({ title: "Item Updated", description: `${values.itemName} has been updated in inventory.` });
+    } else {
+      const newItem = { id: String(Date.now()), ...values };
+      setInventoryItems([...inventoryItems, newItem]);
+      toast({ title: "Item Added", description: `${values.itemName} has been added to inventory.` });
+    }
+    setIsFormOpen(false);
+    setEditingItem(null);
+  };
+
+  const handleDelete = (itemId: string) => {
+    setInventoryItems(inventoryItems.filter(item => item.id !== itemId));
+    toast({ title: "Item Deleted", description: "The inventory item has been deleted.", variant: "destructive" });
+  };
+  
+  const handleEdit = (item: InventoryItem) => {
+    setEditingItem(item);
+    setIsFormOpen(true);
+  };
+
+  const handleAddNew = () => {
+    setEditingItem(null);
+    setIsFormOpen(true);
+  };
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 className="text-3xl font-bold font-headline">Inventory Management</h1>
+        <Button onClick={handleAddNew}>
+          <PlusCircle className="mr-2 h-4 w-4" /> Add New Item
+        </Button>
+      </div>
+
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="font-headline">{editingItem ? "Edit Inventory Item" : "Add New Inventory Item"}</DialogTitle>
+            <DialogDescription>
+              {editingItem ? "Update the details of the inventory item." : "Fill in the details to add a new item to inventory."}
+            </DialogDescription>
+          </DialogHeader>
+          <AddInventoryItemForm 
+            onSubmit={handleSubmit} 
+            defaultValues={editingItem || {}}
+            onClose={() => setIsFormOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Current Stock</CardTitle>
+          <CardDescription>Track and manage your inventory levels.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Item Name</TableHead>
+                <TableHead>Quantity</TableHead>
+                <TableHead>Unit</TableHead>
+                <TableHead>Supplier</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {inventoryItems.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">{item.itemName}</TableCell>
+                  <TableCell>{item.quantity}</TableCell>
+                  <TableCell>{item.unit}</TableCell>
+                  <TableCell>{item.supplier || "N/A"}</TableCell>
+                  <TableCell>
+                    {item.lowStockThreshold !== undefined && item.quantity <= item.lowStockThreshold ? (
+                      <Badge variant="destructive" className="flex items-center gap-1">
+                        <AlertTriangle className="h-3 w-3" /> Low Stock
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary">In Stock</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="icon" onClick={() => handleEdit(item)} aria-label="Edit Item">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                       <Button variant="outline" size="icon" aria-label="Add Stock (placeholder)">
+                        <PackagePlus className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="icon" onClick={() => handleDelete(item.id)} aria-label="Delete Item">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      <InventoryPredictionForm />
+    </div>
+  );
+}

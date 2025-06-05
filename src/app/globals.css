@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 39 77% 96%; /* Light Cream/Beige - #FAF6F0 */
+    --foreground: 28 45% 31%; /* Dark Brown - #6F5B4F */
+
+    --card: 40 100% 98%; /* Off-white/Very Light Beige - #FFFCFA */
+    --card-foreground: 28 45% 31%; /* Dark Brown */
+
+    --popover: 40 100% 98%; /* Off-white */
+    --popover-foreground: 28 45% 31%; /* Dark Brown */
+
+    --primary: 30 38% 67%; /* Muted Light Brown/Tan - #C9B5A5 */
+    --primary-foreground: 28 45% 20%; /* Darker Brown for text on primary - #4A3C32 */
+
+    --secondary: 30 30% 80%; /* Lighter Tan/Beige */
+    --secondary-foreground: 28 45% 31%; /* Dark Brown */
+
+    --muted: 40 20% 92%; /* Very light gray/beige */
+    --muted-foreground: 30 30% 50%; /* Medium Brown/Gray */
+
+    --accent: 28 45% 31%; /* Dark Brown (same as foreground) */
+    --accent-foreground: 39 77% 96%; /* Light Cream/Beige (same as background) */
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 30 30% 88%; /* Light Beige/Gray border - #E6E0DB */
+    --input: 0 0% 100%; /* White for input backgrounds like search */
+    --ring: 30 38% 67%; /* Primary color for focus rings */
+
+    --radius: 0.5rem;
+
+    /* New Sidebar Theme */
+    --sidebar-background: 28 24% 26%; /* Dark Brown - #50463F */
+    --sidebar-foreground: 36 43% 89%; /* Light Beige/Off-white - #EBE6E1 */
+    --sidebar-primary: 28 24% 18%; /* Active item bg - Darker shade of sidebar bg #3F3731 */
+    --sidebar-primary-foreground: 36 43% 89%; /* Light Beige/Off-white */
+    --sidebar-accent: 28 24% 30%; /* Hover item bg - Slightly lighter sidebar bg #5C524C */
+    --sidebar-accent-foreground: 36 43% 89%; /* Light Beige/Off-white */
+    --sidebar-border: 28 24% 32%; /* Slightly lighter than sidebar bg */
+    --sidebar-ring: 30 38% 67%; /* Muted Light Brown/Tan for focus rings */
+
+    /* Chart colors based on new theme - using shades of primary and neutrals */
+    --chart-1: 30 38% 67%; /* Muted Light Brown/Tan - primary */
+    --chart-2: 28 45% 45%; /* Medium Dark Brown */
+    --chart-3: 35 30% 75%; /* Lighter Muted Tan */
+    --chart-4: 28 45% 31%; /* Dark Brown - foreground */
+    --chart-5: 30 38% 55%; /* Darker Tan */
+  }
+
+  .dark {
+    /* Keeping dark theme consistent with new light theme for now, adjust if specific dark design is provided */
+    --background: 28 24% 10%; /* Very Dark Brown */
+    --foreground: 36 43% 85%; /* Light Beige/Off-white */
+
+    --card: 28 24% 15%; /* Darker Brown for cards */
+    --card-foreground: 36 43% 85%;
+
+    --popover: 28 24% 15%;
+    --popover-foreground: 36 43% 85%;
+
+    --primary: 30 38% 67%; /* Muted Light Brown/Tan */
+    --primary-foreground: 28 45% 20%;
+
+    --secondary: 28 24% 25%; /* Medium Dark Brown */
+    --secondary-foreground: 36 43% 85%;
+
+    --muted: 28 24% 20%;
+    --muted-foreground: 36 43% 70%;
+
+    --accent: 30 38% 55%;
+    --accent-foreground: 28 24% 10%;
+
+    --border: 28 24% 28%;
+    --input: 28 24% 20%;
+    --ring: 30 38% 67%;
+
+    --sidebar-background: 28 24% 8%;
+    --sidebar-foreground: 36 43% 85%;
+    --sidebar-primary: 28 24% 15%;
+    --sidebar-primary-foreground: 36 43% 85%;
+    --sidebar-accent: 28 24% 20%;
+    --sidebar-accent-foreground: 36 43% 85%;
+    --sidebar-border: 28 24% 12%;
+    --sidebar-ring: 30 38% 67%;
+
+    --chart-1: 30 38% 67%;
+    --chart-2: 28 45% 50%;
+    --chart-3: 35 30% 70%;
+    --chart-4: 28 45% 60%;
+    --chart-5: 30 38% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-headline;
+  }
+}
