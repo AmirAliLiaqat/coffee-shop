@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { Edit, Trash2, PlusCircle, LayoutGrid, List } from "lucide-react";
@@ -13,7 +13,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { AddMenuItemForm } from "@/components/menu/AddMenuItemForm";
 import { useToast } from "@/hooks/use-toast";
@@ -27,6 +26,7 @@ interface MenuItem {
   price: number;
   available: boolean;
   description?: string;
+  dataAiHint?: string;
 }
 
 const initialMenuItems: MenuItem[] = [
@@ -61,7 +61,7 @@ export default function MenuPage() {
     setMenuItems(menuItems.filter(item => item.id !== itemId));
     toast({ title: "Item Deleted", description: "The menu item has been deleted.", variant: "destructive" });
   };
-  
+
   const handleEdit = (item: MenuItem) => {
     setEditingItem(item);
     setIsDialogOpen(true);
@@ -73,7 +73,7 @@ export default function MenuPage() {
   };
 
   const toggleAvailability = (itemId: string) => {
-    setMenuItems(menuItems.map(item => 
+    setMenuItems(menuItems.map(item =>
       item.id === itemId ? { ...item, available: !item.available } : item
     ));
   };
@@ -101,8 +101,8 @@ export default function MenuPage() {
               {editingItem ? "Update the details of the menu item." : "Fill in the details to add a new item to the menu."}
             </DialogDescription>
           </DialogHeader>
-          <AddMenuItemForm 
-            onSubmit={handleSubmit} 
+          <AddMenuItemForm
+            onSubmit={handleSubmit}
             defaultValues={editingItem || {}}
             onClose={() => setIsDialogOpen(false)}
           />
@@ -119,7 +119,7 @@ export default function MenuPage() {
                   alt={item.name}
                   width={300}
                   height={200}
-                  className="rounded-t-lg object-cover aspect-[3/2]"
+                  className="rounded-t-lg w-full object-cover aspect-[3/2]"
                   data-ai-hint={(item as any).dataAiHint || "food drink"}
                 />
               </CardHeader>
@@ -130,7 +130,7 @@ export default function MenuPage() {
                 {item.description && <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{item.description}</p>}
               </CardContent>
               <CardFooter className="flex flex-col items-start gap-2 pt-4">
-                 <div className="flex items-center space-x-2 w-full justify-between">
+                <div className="flex items-center space-x-2 w-full justify-between">
                   <label htmlFor={`available-${item.id}`} className="text-sm font-medium">Available</label>
                   <Switch
                     id={`available-${item.id}`}
