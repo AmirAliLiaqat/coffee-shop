@@ -3,18 +3,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Tag, Calendar, Users, TrendingUp } from "lucide-react";
+import { Tag, Calendar, Users, TrendingUp } from "lucide-react";
+import { SharedDialog } from "@/components/ui/shared-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function PromotionsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -82,105 +76,93 @@ export default function PromotionsPage() {
             Manage special offers and discounts for your customers.
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Promotion
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Promotion</DialogTitle>
-              <DialogDescription>
-                Add a new promotion or special offer for your customers.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
+        <SharedDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title="Create New Promotion"
+          description="Add a new promotion or special offer for your customers."
+          onSubmit={() => setIsDialogOpen(false)}
+          submitText="Create Promotion"
+          onClose={handleCancel}
+        >
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Promotion Name</Label>
+              <Input
+                id="name"
+                value={newPromotion.name}
+                onChange={(e) =>
+                  setNewPromotion({ ...newPromotion, name: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={newPromotion.description}
+                onChange={(e) =>
+                  setNewPromotion({ ...newPromotion, description: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="type">Promotion Type</Label>
+              <Select
+                value={newPromotion.type}
+                onValueChange={(value) =>
+                  setNewPromotion({ ...newPromotion, type: value })
+                }
+              >
+                <SelectTrigger id="type">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="discount">Discount</SelectItem>
+                  <SelectItem value="bogo">Buy One Get One</SelectItem>
+                  <SelectItem value="combo">Combo Deal</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {newPromotion.type === "discount" && (
               <div className="space-y-2">
-                <Label htmlFor="name">Promotion Name</Label>
+                <Label htmlFor="discount">Discount Amount</Label>
                 <Input
-                  id="name"
-                  value={newPromotion.name}
+                  id="discount"
+                  value={newPromotion.discount}
                   onChange={(e) =>
-                    setNewPromotion({ ...newPromotion, name: e.target.value })
+                    setNewPromotion({ ...newPromotion, discount: e.target.value })
                   }
-                  placeholder="Summer Special"
+                  placeholder="e.g., 20% or $5"
+                />
+              </div>
+            )}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="startDate">Start Date</Label>
+                <Input
+                  id="startDate"
+                  type="date"
+                  value={newPromotion.startDate}
+                  onChange={(e) =>
+                    setNewPromotion({ ...newPromotion, startDate: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <textarea
-                  id="description"
-                  className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={newPromotion.description}
+                <Label htmlFor="endDate">End Date</Label>
+                <Input
+                  id="endDate"
+                  type="date"
+                  value={newPromotion.endDate}
                   onChange={(e) =>
-                    setNewPromotion({ ...newPromotion, description: e.target.value })
+                    setNewPromotion({ ...newPromotion, endDate: e.target.value })
                   }
-                  placeholder="Describe your promotion..."
-                  rows={3}
                 />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="type">Type</Label>
-                  <select
-                    id="type"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    value={newPromotion.type}
-                    onChange={(e) =>
-                      setNewPromotion({ ...newPromotion, type: e.target.value })
-                    }
-                  >
-                    <option value="discount">Discount</option>
-                    <option value="bogo">Buy One Get One</option>
-                    <option value="combo">Combo Deal</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="discount">Discount</Label>
-                  <Input
-                    id="discount"
-                    type="text"
-                    value={newPromotion.discount}
-                    onChange={(e) =>
-                      setNewPromotion({ ...newPromotion, discount: e.target.value })
-                    }
-                    placeholder="20% or $5"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="startDate">Start Date</Label>
-                  <Input
-                    id="startDate"
-                    type="date"
-                    value={newPromotion.startDate}
-                    onChange={(e) =>
-                      setNewPromotion({ ...newPromotion, startDate: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="endDate">End Date</Label>
-                  <Input
-                    id="endDate"
-                    type="date"
-                    value={newPromotion.endDate}
-                    onChange={(e) =>
-                      setNewPromotion({ ...newPromotion, endDate: e.target.value })
-                    }
-                  />
-                </div>
               </div>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={handleCancel}>Cancel</Button>
-              <Button onClick={() => setIsDialogOpen(false)}>Create Promotion</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          </div>
+        </SharedDialog>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

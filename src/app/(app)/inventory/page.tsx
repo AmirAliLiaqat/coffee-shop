@@ -5,20 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Edit, Trash2, PlusCircle, AlertTriangle, PackagePlus } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import { AddInventoryItemForm } from "@/components/inventory/AddInventoryItemForm";
 import { InventoryPredictionForm } from "@/components/inventory/InventoryPredictionForm";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SharedDialog } from "@/components/ui/shared-dialog"
 
 interface InventoryItem {
   id: string;
@@ -104,48 +97,42 @@ export default function InventoryPage() {
         </Button>
       </div>
 
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle className="font-headline">{editingItem ? "Edit Inventory Item" : "Add New Inventory Item"}</DialogTitle>
-            <DialogDescription>
-              {editingItem ? "Update the details of the inventory item." : "Fill in the details to add a new item to inventory."}
-            </DialogDescription>
-          </DialogHeader>
-          <AddInventoryItemForm
-            onSubmit={handleSubmit}
-            defaultValues={editingItem || {}}
-            onClose={() => setIsFormOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
+      <SharedDialog
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        title={editingItem ? "Edit Inventory Item" : "Add New Inventory Item"}
+        description={editingItem ? "Update the details of the inventory item." : "Fill in the details to add a new item to inventory."}
+        size="lg"
+        onClose={() => setIsFormOpen(false)}
+      >
+        <AddInventoryItemForm
+          onSubmit={handleSubmit}
+          defaultValues={editingItem || {}}
+          onClose={() => setIsFormOpen(false)}
+        />
+      </SharedDialog>
 
-      <Dialog open={isStockDialogOpen} onOpenChange={setIsStockDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle className="font-headline">Add Stock</DialogTitle>
-            <DialogDescription>
-              Add stock to {selectedItem?.itemName}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="quantity">Quantity to Add</Label>
-              <Input
-                id="quantity"
-                type="number"
-                min="1"
-                value={stockQuantity}
-                onChange={(e) => setStockQuantity(parseInt(e.target.value) || 0)}
-              />
-            </div>
+      <SharedDialog
+        open={isStockDialogOpen}
+        onOpenChange={setIsStockDialogOpen}
+        title="Add Stock"
+        description={`Add stock to ${selectedItem?.itemName}`}
+        onSubmit={handleStockUpdate}
+        submitText="Add Stock"
+      >
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="quantity">Quantity to Add</Label>
+            <Input
+              id="quantity"
+              type="number"
+              min="1"
+              value={stockQuantity}
+              onChange={(e) => setStockQuantity(parseInt(e.target.value) || 0)}
+            />
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsStockDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleStockUpdate}>Add Stock</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </div>
+      </SharedDialog>
 
       <Card>
         <CardHeader>

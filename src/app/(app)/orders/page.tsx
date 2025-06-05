@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -8,28 +7,20 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Eye, Edit, Filter, Search, PlusCircle } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-} from "@/components/ui/dialog";
 import { AddOrderForm } from "@/components/orders/AddOrderForm";
 import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
+import { SharedDialog } from "@/components/ui/shared-dialog"
 
 type OrderStatus = "Pending" | "Preparing" | "Ready" | "Completed" | "Cancelled";
 
 interface Order {
   id: string;
   customerName: string;
-  items: string; // Item[] in a real app
+  items: string;
   status: OrderStatus;
-  totalAmount: string; // number in a real app
-  assignedStaff: string; // StaffMember object in a real app
+  totalAmount: string;
+  assignedStaff: string;
   orderDate: string;
   notes?: string;
 }
@@ -59,8 +50,26 @@ export default function OrdersPage() {
   const [isUpdateStatusDialogOpen, setIsUpdateStatusDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [statusToUpdate, setStatusToUpdate] = useState<OrderStatus | "">("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [staffFilter, setStaffFilter] = useState("all");
 
   const { toast } = useToast();
+
+  // Filter orders based on search query and filters
+  const filteredOrders = orders.filter((order) => {
+    const matchesSearch = searchQuery === "" ||
+      order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.id.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus = statusFilter === "all" ||
+      order.status.toLowerCase() === statusFilter.toLowerCase();
+
+    const matchesStaff = staffFilter === "all" ||
+      order.assignedStaff.toLowerCase().replace(" ", "-") === staffFilter.toLowerCase();
+
+    return matchesSearch && matchesStatus && matchesStaff;
+  });
 
   const handleAddNewOrder = () => {
     setIsAddOrderDialogOpen(true);
@@ -105,7 +114,7 @@ export default function OrdersPage() {
       setSelectedOrder(null);
     }
   };
-  
+
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {
       case "Completed": return "bg-green-100 text-green-700";
@@ -127,75 +136,70 @@ export default function OrdersPage() {
         </Button>
       </div>
 
-      {/* Add Order Dialog */}
-      <Dialog open={isAddOrderDialogOpen} onOpenChange={setIsAddOrderDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle className="font-headline">Add New Order</DialogTitle>
-            <DialogDescription>Fill in the details to create a new customer order.</DialogDescription>
-          </DialogHeader>
-          <AddOrderForm
-            onSubmit={handleAddOrderSubmit}
-            staffList={mockStaffList}
-            onClose={() => setIsAddOrderDialogOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
+      <SharedDialog
+        open={isAddOrderDialogOpen}
+        onOpenChange={setIsAddOrderDialogOpen}
+        title="Add New Order"
+        description="Fill in the details to create a new customer order."
+        size="lg"
+        onClose={() => setIsAddOrderDialogOpen(false)}
+      >
+        <AddOrderForm
+          onSubmit={handleAddOrderSubmit}
+          staffList={mockStaffList}
+          onClose={() => setIsAddOrderDialogOpen(false)}
+        />
+      </SharedDialog>
 
-      {/* View Order Dialog */}
-      <Dialog open={isViewOrderDialogOpen} onOpenChange={setIsViewOrderDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] md:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle className="font-headline">Order Details: {selectedOrder?.id}</DialogTitle>
-          </DialogHeader>
-          {selectedOrder && (
-            <div className="space-y-3 py-4">
-              <p><strong>Customer:</strong> {selectedOrder.customerName}</p>
-              <p><strong>Items:</strong> {selectedOrder.items}</p>
-              <p><strong>Total:</strong> {selectedOrder.totalAmount}</p>
-              <p><strong>Status:</strong> <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(selectedOrder.status)}`}>{selectedOrder.status}</span></p>
-              <p><strong>Assigned Staff:</strong> {selectedOrder.assignedStaff}</p>
-              <p><strong>Order Date:</strong> {selectedOrder.orderDate}</p>
-              {selectedOrder.notes && <p><strong>Notes:</strong> {selectedOrder.notes}</p>}
+      <SharedDialog
+        open={isViewOrderDialogOpen}
+        onOpenChange={setIsViewOrderDialogOpen}
+        title={`Order Details: ${selectedOrder?.id}`}
+        size="lg"
+        showCloseButton={true}
+        onClose={() => setIsViewOrderDialogOpen(false)}
+      >
+        {selectedOrder && (
+          <div className="space-y-3 py-4">
+            <p><strong>Customer:</strong> {selectedOrder.customerName}</p>
+            <p><strong>Items:</strong> {selectedOrder.items}</p>
+            <p><strong>Total:</strong> {selectedOrder.totalAmount}</p>
+            <p><strong>Status:</strong> <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(selectedOrder.status)}`}>{selectedOrder.status}</span></p>
+            <p><strong>Assigned Staff:</strong> {selectedOrder.assignedStaff}</p>
+            <p><strong>Order Date:</strong> {selectedOrder.orderDate}</p>
+            {selectedOrder.notes && <p><strong>Notes:</strong> {selectedOrder.notes}</p>}
+          </div>
+        )}
+      </SharedDialog>
+
+      <SharedDialog
+        open={isUpdateStatusDialogOpen}
+        onOpenChange={setIsUpdateStatusDialogOpen}
+        title={`Update Order Status: ${selectedOrder?.id}`}
+        description="Select the new status for this order."
+        onSubmit={handleUpdateStatusSubmit}
+        submitText="Update Status"
+        showCloseButton={true}
+        onClose={() => setIsUpdateStatusDialogOpen(false)}
+      >
+        {selectedOrder && (
+          <div className="py-4 space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="status-update">New Status</Label>
+              <Select value={statusToUpdate} onValueChange={(value) => setStatusToUpdate(value as OrderStatus)}>
+                <SelectTrigger id="status-update">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {orderStatuses.map(status => (
+                    <SelectItem key={status} value={status}>{status}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsViewOrderDialogOpen(false)}>Close</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Update Status Dialog */}
-      <Dialog open={isUpdateStatusDialogOpen} onOpenChange={setIsUpdateStatusDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle className="font-headline">Update Order Status: {selectedOrder?.id}</DialogTitle>
-            <DialogDescription>Select the new status for this order.</DialogDescription>
-          </DialogHeader>
-          {selectedOrder && (
-            <div className="py-4 space-y-4">
-              <div className="grid gap-2">
-                <Label htmlFor="status-update">New Status</Label>
-                <Select value={statusToUpdate} onValueChange={(value) => setStatusToUpdate(value as OrderStatus)}>
-                  <SelectTrigger id="status-update">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {orderStatuses.map(status => (
-                      <SelectItem key={status} value={status}>{status}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsUpdateStatusDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleUpdateStatusSubmit} disabled={!statusToUpdate || statusToUpdate === selectedOrder?.status}>Update Status</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
+          </div>
+        )}
+      </SharedDialog>
 
       <Card>
         <CardHeader>
@@ -204,32 +208,44 @@ export default function OrdersPage() {
           <div className="mt-4 flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search by customer or ID..." className="pl-8" />
+              <Input
+                placeholder="Search by customer or ID..."
+                className="pl-8"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-            <Select>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="Filter by Status" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Statuses</SelectItem>
                 {orderStatuses.map(status => (
-                   <SelectItem key={status} value={status.toLowerCase()}>{status}</SelectItem>
+                  <SelectItem key={status} value={status.toLowerCase()}>{status}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <Select>
+            <Select value={staffFilter} onValueChange={setStaffFilter}>
               <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="Filter by Staff" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Staff</SelectItem>
                 {mockStaffList.map(staff => (
-                   <SelectItem key={staff.id} value={staff.name.toLowerCase().replace(" ", "-")}>{staff.name}</SelectItem>
+                  <SelectItem key={staff.id} value={staff.name.toLowerCase().replace(" ", "-")}>{staff.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" /> Apply Filters
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchQuery("");
+                setStatusFilter("all");
+                setStaffFilter("all");
+              }}
+            >
+              <Filter className="mr-2 h-4 w-4" /> Reset Filters
             </Button>
           </div>
         </CardHeader>
@@ -247,7 +263,7 @@ export default function OrdersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
+              {filteredOrders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell className="font-medium">{order.id}</TableCell>
                   <TableCell>{order.customerName}</TableCell>

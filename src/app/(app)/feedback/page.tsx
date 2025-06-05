@@ -12,12 +12,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Star, MessageSquare, TrendingUp, Download, Filter } from "lucide-react";
+import { SharedDialog } from "@/components/ui/shared-dialog"
+
+interface Feedback {
+  id: number;
+  customerName: string;
+  rating: number;
+  comment: string;
+  date: string;
+  sentiment: string;
+}
 
 export default function FeedbackPage() {
-  const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
   const [dateRange, setDateRange] = useState("Last 30 Days");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
@@ -89,109 +98,14 @@ export default function FeedbackPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Filter className="mr-2 h-4 w-4" />
-                Filter
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Filter Feedback</DialogTitle>
-                <DialogDescription>
-                  Filter feedback by date range and rating.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="dateRange">Date Range</Label>
-                  <select
-                    id="dateRange"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    value={dateRange}
-                    onChange={(e) => setDateRange(e.target.value)}
-                  >
-                    <option>Last 7 Days</option>
-                    <option>Last 30 Days</option>
-                    <option>Last 90 Days</option>
-                    <option>This Year</option>
-                    <option>Custom Range</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Rating</Label>
-                  <div className="space-y-2">
-                    {[5, 4, 3, 2, 1].map((rating) => (
-                      <label key={rating} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300"
-                        />
-                        <div className="flex items-center">
-                          {[...Array(rating)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="h-4 w-4 fill-yellow-400 text-yellow-400"
-                            />
-                          ))}
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={handleFilterCancel}>Reset</Button>
-                <Button onClick={() => setIsFilterOpen(false)}>Apply Filters</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-          <Dialog open={isExportOpen} onOpenChange={setIsExportOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Download className="mr-2 h-4 w-4" />
-                Export
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Export Feedback</DialogTitle>
-                <DialogDescription>
-                  Choose the format and data range for your export.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="exportFormat">Export Format</Label>
-                  <select
-                    id="exportFormat"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  >
-                    <option>CSV</option>
-                    <option>Excel</option>
-                    <option>PDF</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="exportDateRange">Date Range</Label>
-                  <select
-                    id="exportDateRange"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  >
-                    <option>Last 7 days</option>
-                    <option>Last 30 days</option>
-                    <option>Last 90 days</option>
-                    <option>Custom Range</option>
-                  </select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={handleExportCancel}>Cancel</Button>
-                <Button onClick={() => setIsExportOpen(false)}>Export Data</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <Button variant="outline" onClick={() => setIsFilterOpen(true)}>
+            <Filter className="mr-2 h-4 w-4" />
+            Filter
+          </Button>
+          <Button variant="outline" onClick={() => setIsExportOpen(true)}>
+            <Download className="mr-2 h-4 w-4" />
+            Export
+          </Button>
         </div>
       </div>
 
@@ -282,7 +196,10 @@ export default function FeedbackPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setSelectedFeedback(feedback)}
+                      onClick={() => {
+                        setSelectedFeedback(feedback);
+                        setIsReplyOpen(true);
+                      }}
                     >
                       Reply
                     </Button>
@@ -311,48 +228,132 @@ export default function FeedbackPage() {
         </Card>
       </div>
 
-      <Dialog open={isReplyOpen} onOpenChange={setIsReplyOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Reply to Feedback</DialogTitle>
-            <DialogDescription>
-              Respond to customer feedback and address their concerns.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="space-y-2">
-              <h4 className="font-medium">Original Feedback</h4>
-              <div className="p-4 border rounded-lg">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">{selectedFeedback?.customerName}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {selectedFeedback?.date}
-                  </span>
-                </div>
-                <div className="flex items-center my-2">
-                  {selectedFeedback && renderStars(selectedFeedback.rating)}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {selectedFeedback?.comment}
-                </p>
+      <SharedDialog
+        open={isReplyOpen}
+        onOpenChange={setIsReplyOpen}
+        title="Reply to Feedback"
+        description="Respond to customer feedback and address their concerns."
+        onSubmit={() => setIsReplyOpen(false)}
+        submitText="Send Response"
+        showCloseButton={true}
+        onClose={handleReplyCancel}
+      >
+        <div className="grid gap-4 py-4">
+          <div className="space-y-2">
+            <h4 className="font-medium">Original Feedback</h4>
+            <div className="p-4 border rounded-lg">
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{selectedFeedback?.customerName}</span>
+                <span className="text-sm text-muted-foreground">
+                  {selectedFeedback?.date}
+                </span>
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="reply">Your Response</Label>
-              <textarea
-                id="reply"
-                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder="Type your response here..."
-                rows={4}
-              />
+              <div className="flex items-center my-2">
+                {selectedFeedback && renderStars(selectedFeedback.rating)}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {selectedFeedback?.comment}
+              </p>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={handleReplyCancel}>Cancel</Button>
-            <Button onClick={() => setIsReplyOpen(false)}>Send Response</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          <div className="space-y-2">
+            <Label htmlFor="reply">Your Response</Label>
+            <textarea
+              id="reply"
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              placeholder="Type your response here..."
+              rows={4}
+            />
+          </div>
+        </div>
+      </SharedDialog>
+
+      <SharedDialog
+        open={isFilterOpen}
+        onOpenChange={setIsFilterOpen}
+        title="Filter Feedback"
+        description="Filter feedback by date range and rating."
+        onSubmit={() => setIsFilterOpen(false)}
+        submitText="Apply Filters"
+        showCloseButton={true}
+        onClose={handleFilterCancel}
+      >
+        <div className="grid gap-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="dateRange">Date Range</Label>
+            <select
+              id="dateRange"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              value={dateRange}
+              onChange={(e) => setDateRange(e.target.value)}
+            >
+              <option>Last 7 Days</option>
+              <option>Last 30 Days</option>
+              <option>Last 90 Days</option>
+              <option>This Year</option>
+              <option>Custom Range</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label>Rating</Label>
+            <div className="space-y-2">
+              {[5, 4, 3, 2, 1].map((rating) => (
+                <label key={rating} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300"
+                  />
+                  <div className="flex items-center">
+                    {[...Array(rating)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                      />
+                    ))}
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      </SharedDialog>
+
+      <SharedDialog
+        open={isExportOpen}
+        onOpenChange={setIsExportOpen}
+        title="Export Feedback"
+        description="Choose the format and data range for your export."
+        onSubmit={() => setIsExportOpen(false)}
+        submitText="Export"
+        showCloseButton={true}
+        onClose={handleExportCancel}
+      >
+        <div className="grid gap-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="exportFormat">Export Format</Label>
+            <select
+              id="exportFormat"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <option>CSV</option>
+              <option>Excel</option>
+              <option>PDF</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="exportDateRange">Date Range</Label>
+            <select
+              id="exportDateRange"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <option>Last 7 days</option>
+              <option>Last 30 days</option>
+              <option>Last 90 days</option>
+              <option>Custom Range</option>
+            </select>
+          </div>
+        </div>
+      </SharedDialog>
     </div>
   );
 } 

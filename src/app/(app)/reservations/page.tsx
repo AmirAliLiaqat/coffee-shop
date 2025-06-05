@@ -3,18 +3,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Calendar, Clock, Users, Table } from "lucide-react";
+import { Calendar, Clock, Users, Table } from "lucide-react";
+import { SharedDialog } from "@/components/ui/shared-dialog"
 
 export default function ReservationsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -80,165 +72,87 @@ export default function ReservationsPage() {
             Manage table reservations and seating arrangements.
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              New Reservation
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Reservation</DialogTitle>
-              <DialogDescription>
-                Add a new table reservation for your customers.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="customerName">Customer Name</Label>
-                  <Input
-                    id="customerName"
-                    value={newReservation.customerName}
-                    onChange={(e) =>
-                      setNewReservation({
-                        ...newReservation,
-                        customerName: e.target.value,
-                      })
-                    }
-                    placeholder="John Doe"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="partySize">Party Size</Label>
-                  <select
-                    id="partySize"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    value={newReservation.partySize}
-                    onChange={(e) =>
-                      setNewReservation({
-                        ...newReservation,
-                        partySize: e.target.value,
-                      })
-                    }
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((size) => (
-                      <option key={size} value={size}>
-                        {size} {size === 1 ? "person" : "people"}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={newReservation.email}
-                    onChange={(e) =>
-                      setNewReservation({
-                        ...newReservation,
-                        email: e.target.value,
-                      })
-                    }
-                    placeholder="john@example.com"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={newReservation.phone}
-                    onChange={(e) =>
-                      setNewReservation({
-                        ...newReservation,
-                        phone: e.target.value,
-                      })
-                    }
-                    placeholder="(555) 555-5555"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="date">Date</Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={newReservation.date}
-                    onChange={(e) =>
-                      setNewReservation({
-                        ...newReservation,
-                        date: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="time">Time</Label>
-                  <Input
-                    id="time"
-                    type="time"
-                    value={newReservation.time}
-                    onChange={(e) =>
-                      setNewReservation({
-                        ...newReservation,
-                        time: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+        <SharedDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title="Create New Reservation"
+          description="Add a new table reservation for your customers."
+          onSubmit={() => setIsDialogOpen(false)}
+          submitText="Create Reservation"
+          onClose={handleCancel}
+        >
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="customerName">Customer Name</Label>
+              <Input
+                id="customerName"
+                value={newReservation.customerName}
+                onChange={(e) =>
+                  setNewReservation({ ...newReservation, customerName: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                value={newReservation.phone}
+                onChange={(e) =>
+                  setNewReservation({ ...newReservation, phone: e.target.value })
+                }
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="date">Date</Label>
+                <Input
+                  id="date"
+                  type="date"
+                  value={newReservation.date}
+                  onChange={(e) =>
+                    setNewReservation({ ...newReservation, date: e.target.value })
+                  }
+                />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="table">Table</Label>
-                <select
-                  id="table"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  value={newReservation.table}
+                <Label htmlFor="time">Time</Label>
+                <Input
+                  id="time"
+                  type="time"
+                  value={newReservation.time}
                   onChange={(e) =>
-                    setNewReservation({
-                      ...newReservation,
-                      table: e.target.value,
-                    })
+                    setNewReservation({ ...newReservation, time: e.target.value })
                   }
-                >
-                  <option value="">Select a table</option>
-                  {["Table 1", "Table 2", "Table 3", "Table 4", "Table 5"].map(
-                    (table) => (
-                      <option key={table} value={table}>
-                        {table}
-                      </option>
-                    )
-                  )}
-                </select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="notes">Special Requests</Label>
-                <textarea
-                  id="notes"
-                  className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={newReservation.notes}
-                  onChange={(e) =>
-                    setNewReservation({
-                      ...newReservation,
-                      notes: e.target.value,
-                    })
-                  }
-                  placeholder="Any special requests or notes..."
-                  rows={3}
                 />
               </div>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={handleCancel}>Cancel</Button>
-              <Button onClick={() => setIsDialogOpen(false)}>Create Reservation</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            <div className="space-y-2">
+              <Label htmlFor="guests">Number of Guests</Label>
+              <Input
+                id="guests"
+                type="number"
+                min="1"
+                value={newReservation.partySize}
+                onChange={(e) =>
+                  setNewReservation({ ...newReservation, partySize: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="notes">Special Requests</Label>
+              <textarea
+                id="notes"
+                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                value={newReservation.notes}
+                onChange={(e) =>
+                  setNewReservation({ ...newReservation, notes: e.target.value })
+                }
+                placeholder="Any special requests or notes..."
+                rows={3}
+              />
+            </div>
+          </div>
+        </SharedDialog>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

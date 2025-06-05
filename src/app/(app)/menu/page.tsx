@@ -7,16 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { Edit, Trash2, PlusCircle, LayoutGrid, List } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { AddMenuItemForm } from "@/components/menu/AddMenuItemForm";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { SharedDialog } from "@/components/ui/shared-dialog"
 
 interface MenuItem {
   id: string;
@@ -93,21 +87,20 @@ export default function MenuPage() {
         </div>
       </div>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle className="font-headline">{editingItem ? "Edit Menu Item" : "Add New Menu Item"}</DialogTitle>
-            <DialogDescription>
-              {editingItem ? "Update the details of the menu item." : "Fill in the details to add a new item to the menu."}
-            </DialogDescription>
-          </DialogHeader>
-          <AddMenuItemForm
-            onSubmit={handleSubmit}
-            defaultValues={editingItem || {}}
-            onClose={() => setIsDialogOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
+      <SharedDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        title={editingItem ? "Edit Menu Item" : "Add New Menu Item"}
+        description={editingItem ? "Update the details of the menu item." : "Fill in the details to add a new item to the menu."}
+        size="lg"
+        onClose={() => setIsDialogOpen(false)}
+      >
+        <AddMenuItemForm
+          onSubmit={handleSubmit}
+          defaultValues={editingItem || {}}
+          onClose={() => setIsDialogOpen(false)}
+        />
+      </SharedDialog>
 
       {viewMode === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

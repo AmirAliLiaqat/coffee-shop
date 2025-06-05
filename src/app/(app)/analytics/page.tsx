@@ -3,18 +3,11 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Filter, Download, TrendingUp, DollarSign, Users, Coffee } from "lucide-react";
+import { SharedDialog } from "@/components/ui/shared-dialog";
 import { Label } from "@/components/ui/label";
-import { BarChart3, TrendingUp, Users, Coffee, Download, Filter } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 export default function AnalyticsPage() {
   const [dateRange, setDateRange] = useState("This Month");
@@ -24,6 +17,7 @@ export default function AnalyticsPage() {
 
   const handleFilterCancel = () => {
     setIsFilterOpen(false);
+    setDateRange("This Month");
   };
 
   const handleExportCancel = () => {
@@ -40,112 +34,100 @@ export default function AnalyticsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Filter className="mr-2 h-4 w-4" />
-                Filter
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Filter Analytics</DialogTitle>
-                <DialogDescription>
-                  Customize the analytics view by selecting metrics and date range.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="dateRange">Date Range</Label>
-                  <select
-                    id="dateRange"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    value={dateRange}
-                    onChange={(e) => setDateRange(e.target.value)}
-                  >
-                    <option>This Week</option>
-                    <option>This Month</option>
-                    <option>Last Month</option>
-                    <option>This Year</option>
-                    <option>Custom Range</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Metrics</Label>
-                  <div className="space-y-2">
-                    {["revenue", "customers", "sales", "average order"].map((metric) => (
-                      <label key={metric} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          checked={selectedMetrics.includes(metric)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedMetrics([...selectedMetrics, metric]);
-                            } else {
-                              setSelectedMetrics(selectedMetrics.filter((m) => m !== metric));
-                            }
-                          }}
-                          className="h-4 w-4 rounded border-gray-300"
-                        />
-                        <span className="capitalize">{metric}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={handleFilterCancel}>Reset</Button>
-                <Button onClick={() => setIsFilterOpen(false)}>Apply Filters</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-          <Dialog open={isExportOpen} onOpenChange={setIsExportOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Download className="mr-2 h-4 w-4" />
-                Export
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Export Analytics</DialogTitle>
-                <DialogDescription>
-                  Choose the format and data range for your export.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="exportFormat">Export Format</Label>
-                  <select
-                    id="exportFormat"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  >
-                    <option>CSV</option>
-                    <option>Excel</option>
-                    <option>PDF</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="exportDateRange">Date Range</Label>
-                  <select
-                    id="exportDateRange"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  >
-                    <option>Last 7 days</option>
-                    <option>Last 30 days</option>
-                    <option>Last 90 days</option>
-                    <option>Custom Range</option>
-                  </select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={handleExportCancel}>Cancel</Button>
-                <Button onClick={() => setIsExportOpen(false)}>Export Data</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <Button variant="outline" onClick={() => setIsFilterOpen(true)}>
+            <Filter className="mr-2 h-4 w-4" />
+            Filter
+          </Button>
+          <Button variant="outline" onClick={() => setIsExportOpen(true)}>
+            <Download className="mr-2 h-4 w-4" />
+            Export
+          </Button>
         </div>
       </div>
+
+      <SharedDialog
+        open={isFilterOpen}
+        onOpenChange={setIsFilterOpen}
+        title="Filter Analytics"
+        description="Customize the analytics view by selecting metrics and date range."
+        onSubmit={() => setIsFilterOpen(false)}
+        submitText="Apply Filters"
+        showCloseButton={true}
+        onClose={handleFilterCancel}
+      >
+        <div className="grid gap-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="dateRange">Date Range</Label>
+            <Select value={dateRange} onValueChange={setDateRange}>
+              <SelectTrigger id="dateRange">
+                <SelectValue placeholder="Select date range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="yesterday">Yesterday</SelectItem>
+                <SelectItem value="thisWeek">This Week</SelectItem>
+                <SelectItem value="lastWeek">Last Week</SelectItem>
+                <SelectItem value="thisMonth">This Month</SelectItem>
+                <SelectItem value="lastMonth">Last Month</SelectItem>
+                <SelectItem value="custom">Custom Range</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {dateRange === "custom" && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="startDate">Start Date</Label>
+                <Input id="startDate" type="date" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="endDate">End Date</Label>
+                <Input id="endDate" type="date" />
+              </div>
+            </div>
+          )}
+        </div>
+      </SharedDialog>
+
+      <SharedDialog
+        open={isExportOpen}
+        onOpenChange={setIsExportOpen}
+        title="Export Analytics"
+        description="Choose the format and data range for your export."
+        onSubmit={() => setIsExportOpen(false)}
+        submitText="Export"
+        showCloseButton={true}
+        onClose={() => setIsExportOpen(false)}
+      >
+        <div className="grid gap-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="exportFormat">Export Format</Label>
+            <Select>
+              <SelectTrigger id="exportFormat">
+                <SelectValue placeholder="Select format" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="excel">Excel</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="exportDateRange">Date Range</Label>
+            <Select>
+              <SelectTrigger id="exportDateRange">
+                <SelectValue placeholder="Select date range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="last7">Last 7 days</SelectItem>
+                <SelectItem value="last30">Last 30 days</SelectItem>
+                <SelectItem value="last90">Last 90 days</SelectItem>
+                <SelectItem value="custom">Custom Range</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </SharedDialog>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -190,7 +172,7 @@ export default function AnalyticsPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Average Order Value</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">$12.50</div>

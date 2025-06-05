@@ -3,18 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Mail, MessageSquare, Gift } from "lucide-react";
+import { Mail, Gift } from "lucide-react";
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { SharedDialog } from "@/components/ui/shared-dialog"
 
 // Mock data for customers
 const customers = [
@@ -122,53 +115,43 @@ export default function CustomersPage() {
         </CardContent>
       </Card>
 
-      {/* Email Dialog */}
-      <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Send Email to {selectedCustomer?.name}</DialogTitle>
-            <DialogDescription>
-              Write your email message below. It will be sent to {selectedCustomer?.email}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <Textarea
-              placeholder="Write your email message here..."
-              value={emailContent}
-              onChange={(e) => setEmailContent(e.target.value)}
-              className="min-h-[200px]"
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEmailDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handleEmailSubmit} disabled={!emailContent.trim()}>Send Email</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <SharedDialog
+        open={isEmailDialogOpen}
+        onOpenChange={setIsEmailDialogOpen}
+        title={`Send Email to ${selectedCustomer?.name}`}
+        description={`Write your email message below. It will be sent to ${selectedCustomer?.email}`}
+        onSubmit={handleEmailSubmit}
+        submitText="Send Email"
+        onClose={() => setIsEmailDialogOpen(false)}
+      >
+        <div className="grid gap-4 py-4">
+          <Textarea
+            placeholder="Write your email message here..."
+            value={emailContent}
+            onChange={(e) => setEmailContent(e.target.value)}
+            className="min-h-[200px]"
+          />
+        </div>
+      </SharedDialog>
 
-      {/* Promotion Dialog */}
-      <Dialog open={isPromotionDialogOpen} onOpenChange={setIsPromotionDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Send Promotion to {selectedCustomer?.name}</DialogTitle>
-            <DialogDescription>
-              Write your promotion message below. It will be sent to {selectedCustomer?.email}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <Textarea
-              placeholder="Write your promotion message here..."
-              value={promotionContent}
-              onChange={(e) => setPromotionContent(e.target.value)}
-              className="min-h-[200px]"
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsPromotionDialogOpen(false)}>Cancel</Button>
-            <Button onClick={handlePromotionSubmit} disabled={!promotionContent.trim()}>Send Promotion</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <SharedDialog
+        open={isPromotionDialogOpen}
+        onOpenChange={setIsPromotionDialogOpen}
+        title={`Send Promotion to ${selectedCustomer?.name}`}
+        description={`Write your promotion message below. It will be sent to ${selectedCustomer?.email}`}
+        onSubmit={handlePromotionSubmit}
+        submitText="Send Promotion"
+        onClose={() => setIsPromotionDialogOpen(false)}
+      >
+        <div className="grid gap-4 py-4">
+          <Textarea
+            placeholder="Write your promotion message here..."
+            value={promotionContent}
+            onChange={(e) => setPromotionContent(e.target.value)}
+            className="min-h-[200px]"
+          />
+        </div>
+      </SharedDialog>
     </div>
   );
 }
