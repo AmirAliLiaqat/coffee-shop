@@ -26,25 +26,25 @@ export type NavItem = {
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/dashboard/menu", label: "Menu Management", icon: Coffee },
-  { href: "/dashboard/inventory", label: "Inventory", icon: Warehouse },
-  { href: "/dashboard/staff", label: "Staff Management", icon: Users },
-  { href: "/dashboard/customers", label: "Customers", icon: UserCircle },
-  { href: "/dashboard/reservations", label: "Reservations", icon: Calendar },
-  { href: "/dashboard/promotions", label: "Promotions", icon: Tag },
-  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/dashboard/reports", label: "Sales Reports", icon: LineChart },
-  { href: "/dashboard/suppliers", label: "Suppliers", icon: Truck },
+  { href: "/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/menu", label: "Menu Management", icon: Coffee },
+  { href: "/inventory", label: "Inventory", icon: Warehouse },
+  { href: "/staff", label: "Staff Management", icon: Users },
+  { href: "/customers", label: "Customers", icon: UserCircle },
+  { href: "/reservations", label: "Reservations", icon: Calendar },
+  { href: "/promotions", label: "Promotions", icon: Tag },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/reports", label: "Sales Reports", icon: LineChart },
+  { href: "/suppliers", label: "Suppliers", icon: Truck },
   {
-    href: "/dashboard/feedback",
+    href: "/feedback",
     label: "Customer Feedback",
     icon: MessageSquare,
   },
-  { href: "/dashboard/ai-assistant", label: "AI Assistant", icon: Bot },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
+  { href: "/ai-assistant", label: "AI Assistant", icon: Bot },
+  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 export const FOOTER_NAV_ITEMS: NavItem[] = [
-  { href: "/dashboard/logout", label: "Logout", icon: LogOut },
+  { href: "/logout", label: "Logout", icon: LogOut },
 ];
