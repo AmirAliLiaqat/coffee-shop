@@ -3,18 +3,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Truck, Package, DollarSign, Calendar, AlertCircle } from "lucide-react";
+import { SharedDialog } from "@/components/ui/shared-dialog";
+import { AddSupplierForm } from "@/components/dashboard/suppliers/AddSupplierForm";
 
 export default function SuppliersPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -78,7 +71,6 @@ export default function SuppliersPage() {
 
   const handleCancel = () => {
     setIsDialogOpen(false);
-    // Reset form
     setNewSupplier({
       name: "",
       type: "coffee",
@@ -91,155 +83,34 @@ export default function SuppliersPage() {
     });
   };
 
+  const handleSubmit = () => {
+    // Handle form submission
+    setIsDialogOpen(false);
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Suppliers</h1>
-          <p className="text-muted-foreground">
-            Manage your coffee and supplies vendors.
-          </p>
-        </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Supplier
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Supplier</DialogTitle>
-              <DialogDescription>
-                Add a new supplier to your vendor list.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Supplier Name</Label>
-                  <Input
-                    id="name"
-                    value={newSupplier.name}
-                    onChange={(e) =>
-                      setNewSupplier({ ...newSupplier, name: e.target.value })
-                    }
-                    placeholder="Coffee Beans Co."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="type">Type</Label>
-                  <select
-                    id="type"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    value={newSupplier.type}
-                    onChange={(e) =>
-                      setNewSupplier({ ...newSupplier, type: e.target.value })
-                    }
-                  >
-                    <option value="coffee">Coffee</option>
-                    <option value="equipment">Equipment</option>
-                    <option value="packaging">Packaging</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="contactName">Contact Name</Label>
-                  <Input
-                    id="contactName"
-                    value={newSupplier.contactName}
-                    onChange={(e) =>
-                      setNewSupplier({
-                        ...newSupplier,
-                        contactName: e.target.value,
-                      })
-                    }
-                    placeholder="John Smith"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={newSupplier.email}
-                    onChange={(e) =>
-                      setNewSupplier({ ...newSupplier, email: e.target.value })
-                    }
-                    placeholder="john@example.com"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={newSupplier.phone}
-                    onChange={(e) =>
-                      setNewSupplier({ ...newSupplier, phone: e.target.value })
-                    }
-                    placeholder="(555) 555-5555"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="paymentTerms">Payment Terms</Label>
-                  <select
-                    id="paymentTerms"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    value={newSupplier.paymentTerms}
-                    onChange={(e) =>
-                      setNewSupplier({
-                        ...newSupplier,
-                        paymentTerms: e.target.value,
-                      })
-                    }
-                  >
-                    <option value="immediate">Immediate</option>
-                    <option value="7 days">7 days</option>
-                    <option value="15 days">15 days</option>
-                    <option value="30 days">30 days</option>
-                    <option value="60 days">60 days</option>
-                  </select>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
-                <textarea
-                  id="address"
-                  className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={newSupplier.address}
-                  onChange={(e) =>
-                    setNewSupplier({ ...newSupplier, address: e.target.value })
-                  }
-                  placeholder="Enter supplier's address..."
-                  rows={2}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="notes">Notes</Label>
-                <textarea
-                  id="notes"
-                  className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={newSupplier.notes}
-                  onChange={(e) =>
-                    setNewSupplier({ ...newSupplier, notes: e.target.value })
-                  }
-                  placeholder="Additional notes about the supplier..."
-                  rows={3}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={handleCancel}>Cancel</Button>
-              <Button onClick={() => setIsDialogOpen(false)}>Add Supplier</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 className="text-3xl font-bold font-headline">Suppliers</h1>
+        <Button onClick={() => setIsDialogOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" /> Add Supplier
+        </Button>
       </div>
+
+      <SharedDialog
+        open={isDialogOpen}
+        size="lg"
+        onOpenChange={setIsDialogOpen}
+        title="Add New Supplier"
+        description="Add a new supplier to your vendor list."
+      >
+        <AddSupplierForm
+          supplier={newSupplier}
+          onChange={setNewSupplier}
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+        />
+      </SharedDialog>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>

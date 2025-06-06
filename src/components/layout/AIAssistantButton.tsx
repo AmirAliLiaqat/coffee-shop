@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Bot } from "lucide-react";
 import { SharedDialog } from "@/components/ui/shared-dialog";
-import { AIChat } from "./chat/AIChat";
+import { AIChat } from "../dashboard/chat/AIChat";
 
 export function AIAssistantButton() {
   const [isOpen, setIsOpen] = useState(false);

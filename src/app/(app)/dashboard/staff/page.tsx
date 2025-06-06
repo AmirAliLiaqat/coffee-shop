@@ -5,15 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { Edit, UserX, PlusCircle, Badge } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { AddStaffForm } from "@/components/staff/AddStaffForm";
+import { Edit, UserX, PlusCircle } from "lucide-react";
+import { SharedDialog } from "@/components/ui/shared-dialog";
+import { AddStaffForm } from "@/components/dashboard/staff/AddStaffForm";
 import { useToast } from "@/hooks/use-toast";
 
 interface StaffMember {
@@ -44,7 +38,7 @@ export default function StaffPage() {
       role: values.role,
       contactInfo: { email: values.email, phone: values.phone },
       // Default status and shift for new staff, or maintain for existing
-      status: editingStaff?.status || "Active", 
+      status: editingStaff?.status || "Active",
       shiftTiming: editingStaff?.shiftTiming || "Not Set",
     };
 
@@ -67,7 +61,7 @@ export default function StaffPage() {
       phone: staff.contactInfo.phone,
       role: staff.role,
     };
-    setEditingStaff({ ...staff, ...defaultFormValues}); // Pass full staff data to retain ID etc.
+    setEditingStaff({ ...staff, ...defaultFormValues }); // Pass full staff data to retain ID etc.
     setIsFormOpen(true);
   };
 
@@ -77,7 +71,7 @@ export default function StaffPage() {
   };
 
   const toggleStatus = (staffId: string) => {
-    setStaffList(staffList.map(staff => 
+    setStaffList(staffList.map(staff =>
       staff.id === staffId ? { ...staff, status: staff.status === "Active" ? "Inactive" : "Active" } : staff
     ));
   };
@@ -91,21 +85,24 @@ export default function StaffPage() {
         </Button>
       </div>
 
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle className="font-headline">{editingStaff ? "Edit Staff Member" : "Add New Staff Member"}</DialogTitle>
-            <DialogDescription>
-              {editingStaff ? "Update the staff member's details." : "Fill in the details for the new staff member."}
-            </DialogDescription>
-          </DialogHeader>
-          <AddStaffForm 
-            onSubmit={handleSubmit} 
-            defaultValues={editingStaff ? {name: editingStaff.name, email: editingStaff.contactInfo.email, phone: editingStaff.contactInfo.phone, role: editingStaff.role} : {}}
-            onClose={() => setIsFormOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
+      <SharedDialog
+        open={isFormOpen}
+        size="lg"
+        onOpenChange={setIsFormOpen}
+        title={editingStaff ? "Edit Staff Member" : "Add New Staff Member"}
+        description={editingStaff ? "Update the staff member's details." : "Fill in the details for the new staff member."}
+      >
+        <AddStaffForm
+          onSubmit={handleSubmit}
+          defaultValues={editingStaff ? {
+            name: editingStaff.name,
+            email: editingStaff.contactInfo.email,
+            phone: editingStaff.contactInfo.phone,
+            role: editingStaff.role
+          } : {}}
+          onClose={() => setIsFormOpen(false)}
+        />
+      </SharedDialog>
 
       <Card>
         <CardHeader>
@@ -140,7 +137,7 @@ export default function StaffPage() {
                       onCheckedChange={() => toggleStatus(staff.id)}
                       aria-label={`Toggle status for ${staff.name}`}
                     />
-                     <span className="ml-2 text-sm">{staff.status}</span>
+                    <span className="ml-2 text-sm">{staff.status}</span>
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">

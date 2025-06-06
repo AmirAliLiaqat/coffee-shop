@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, BarChart2, PieChart, Users, Package, Loader2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { DateRangePicker } from "@/components/reports/DateRangePicker";
+import { DateRangePicker } from "@/components/dashboard/reports/DateRangePicker";
 import type { DateRange } from "react-day-picker";
 import { ExampleChart } from "@/components/dashboard/ExampleChart";
 import * as XLSX from 'xlsx';

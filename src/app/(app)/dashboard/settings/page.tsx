@@ -1,9 +1,8 @@
-import { ShopInfoForm } from "@/components/settings/ShopInfoForm";
-import { TaxAndChargesForm } from "@/components/settings/TaxAndChargesForm";
-import { ReceiptFormatForm } from "@/components/settings/ReceiptFormatForm";
-import { NotificationsForm } from "@/components/settings/NotificationsForm";
-import { UserRolesForm } from "@/components/settings/UserRolesForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ShopInfoForm } from "@/components/dashboard/settings/ShopInfoForm";
+import { TaxAndChargesForm } from "@/components/dashboard/settings/TaxAndChargesForm";
+import { ReceiptFormatForm } from "@/components/dashboard/settings/ReceiptFormatForm";
+import { NotificationsForm } from "@/components/dashboard/settings/NotificationsForm";
+import { UserRolesForm } from "@/components/dashboard/settings/UserRolesForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Building, CreditCard, Receipt, Bell, ShieldCheck } from "lucide-react";
 

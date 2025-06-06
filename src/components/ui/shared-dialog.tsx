@@ -8,16 +8,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { ReactNode } from "react"
 
 interface SharedDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   title: string
   description?: string
-  children: React.ReactNode
-  footer?: React.ReactNode
+  children: ReactNode
+  footer?: ReactNode
   size?: "default" | "sm" | "lg"
   showCloseButton?: boolean
   onClose?: () => void
@@ -25,6 +27,7 @@ interface SharedDialogProps {
   submitText?: string
   cancelText?: string
   className?: string
+  trigger?: ReactNode
 }
 
 export function SharedDialog({
@@ -41,6 +44,7 @@ export function SharedDialog({
   submitText = "Save",
   cancelText = "Cancel",
   className,
+  trigger,
 }: SharedDialogProps) {
   const sizeClasses = {
     default: "sm:max-w-[425px]",
@@ -72,6 +76,7 @@ export function SharedDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className={`${sizeClasses[size]} ${className}`}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>

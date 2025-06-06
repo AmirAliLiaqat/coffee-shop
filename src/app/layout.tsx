@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ClientOnlyToaster } from '@/components/layout/ClientOnlyToaster';
 import { Inter } from "next/font/google";
-import { AIAssistantButton } from "@/components/AIAssistantButton";
+import { AIAssistantButton } from "@/components/layout/AIAssistantButton";
 
 const inter = Inter({ subsets: ["latin"] });
 

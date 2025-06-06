@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { Edit, Trash2, PlusCircle, LayoutGrid, List } from "lucide-react";
-import { AddMenuItemForm } from "@/components/menu/AddMenuItemForm";
+import { AddMenuItemForm } from "@/components/dashboard/menu/AddMenuItemForm";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { SharedDialog } from "@/components/ui/shared-dialog"

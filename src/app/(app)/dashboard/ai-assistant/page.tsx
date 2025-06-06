@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { AIChat } from "@/components/chat/AIChat";
+import { AIChat } from "@/components/dashboard/chat/AIChat";
 
 export default function AIAssistantPage() {
   return (

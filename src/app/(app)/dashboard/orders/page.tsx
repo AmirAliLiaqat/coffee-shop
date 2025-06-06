@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Eye, Edit, Filter, Search, PlusCircle } from "lucide-react";
-import { AddOrderForm } from "@/components/orders/AddOrderForm";
+import { AddOrderForm } from "@/components/dashboard/orders/AddOrderForm";
 import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
 import { SharedDialog } from "@/components/ui/shared-dialog"

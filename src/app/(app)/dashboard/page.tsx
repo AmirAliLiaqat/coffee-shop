@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { StatCard } from "@/components/dashboard/StatCard";
 import { ExampleChart } from "@/components/dashboard/ExampleChart";
-import { Package, DollarSign, TrendingUp, Users, AlertTriangle, ShoppingCart, Activity, Clock, Loader2 } from "lucide-react";
+import { DollarSign, TrendingUp, Users, AlertTriangle, ShoppingCart, Activity, Loader2 } from "lucide-react";
 
 interface ChartData {
   month?: string;
@@ -56,11 +56,11 @@ export default function DashboardPage() {
       );
     }
     return (
-      <ExampleChart 
-        data={data} 
-        title={title} 
+      <ExampleChart
+        data={data}
+        title={title}
         description={description}
-        dataKeyX={dataKeyX} 
+        dataKeyX={dataKeyX}
         dataKeyY={dataKeyY}
         fillColor={fillColor}
       />
@@ -70,7 +70,7 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-3xl font-bold font-headline">Dashboard</h1>
-      
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Today's Orders" value="120" icon={ShoppingCart} description="Total orders today" colorClass="text-blue-500" />
         <StatCard title="Today's Revenue" value="$1,250" icon={DollarSign} description="+5% from yesterday" colorClass="text-green-500" />
@@ -79,36 +79,36 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-         <StatCard title="Low Stock Alerts" value="3 Items" icon={AlertTriangle} description="Needs restocking soon" colorClass="text-red-500" />
-         <StatCard title="Pending Orders" value="8" icon={Activity} description="Awaiting preparation" colorClass="text-yellow-500" />
+        <StatCard title="Low Stock Alerts" value="3 Items" icon={AlertTriangle} description="Needs restocking soon" colorClass="text-red-500" />
+        <StatCard title="Pending Orders" value="8" icon={Activity} description="Awaiting preparation" colorClass="text-yellow-500" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {renderChart(
           salesData,
-          "Sales Over Time", 
+          "Sales Over Time",
           "Monthly sales figures for the last 6 months.",
-          "month", 
+          "month",
           "sales",
           "hsl(var(--chart-1))"
         )}
         {renderChart(
           orderVolumeData,
-          "Order Volume (Weekly)", 
+          "Order Volume (Weekly)",
           "Daily order volume for the current week.",
-          "day", 
+          "day",
           "volume",
           "hsl(var(--chart-2))"
         )}
       </div>
       <div>
         {renderChart(
-            peakTimesData,
-            "Best Times of Day for Sales",
-            "Order distribution throughout the day.",
-            "time",
-            "orders",
-            "hsl(var(--chart-3))"
+          peakTimesData,
+          "Best Times of Day for Sales",
+          "Order distribution throughout the day.",
+          "time",
+          "orders",
+          "hsl(var(--chart-3))"
         )}
       </div>
     </div>
