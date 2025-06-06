@@ -8,9 +8,31 @@ import { Label } from "@/components/ui/label";
 import { Plus, Truck, Package, DollarSign, Calendar, AlertCircle } from "lucide-react";
 import { SharedDialog } from "@/components/ui/shared-dialog";
 import { AddSupplierForm } from "@/components/dashboard/suppliers/AddSupplierForm";
+import { toast } from "@/components/ui/use-toast";
+
+interface Supplier {
+  id: number;
+  name: string;
+  type: string;
+  status: string;
+  lastOrder: string;
+  nextDelivery: string;
+  pendingOrders: number;
+}
+
+interface Delivery {
+  id: number;
+  supplier: string;
+  items: string[];
+  deliveryDate: string;
+  status: string;
+}
 
 export default function SuppliersPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+  const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(null);
   const [newSupplier, setNewSupplier] = useState({
     name: "",
     type: "coffee",
@@ -88,6 +110,19 @@ export default function SuppliersPage() {
     setIsDialogOpen(false);
   };
 
+  const handleViewSupplier = (supplier: Supplier) => {
+    setSelectedSupplier(supplier);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleTrackDelivery = (delivery: Delivery) => {
+    setSelectedDelivery(delivery);
+    toast({
+      title: "Tracking Delivery",
+      description: `Tracking delivery from ${delivery.supplier} scheduled for ${delivery.deliveryDate}`,
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -110,6 +145,61 @@ export default function SuppliersPage() {
           onSubmit={handleSubmit}
           onCancel={handleCancel}
         />
+      </SharedDialog>
+
+      <SharedDialog
+        open={isViewDialogOpen}
+        size="lg"
+        onOpenChange={setIsViewDialogOpen}
+        title={selectedSupplier?.name || "Supplier Details"}
+        description="View supplier information and history"
+      >
+        {selectedSupplier && (
+          <div className="space-y-6">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">Basic Information</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Type</Label>
+                    <p className="text-sm text-muted-foreground">{selectedSupplier.type}</p>
+                  </div>
+                  <div>
+                    <Label>Status</Label>
+                    <p className="text-sm text-muted-foreground">{selectedSupplier.status}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">Order Information</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Last Order</Label>
+                    <p className="text-sm text-muted-foreground">{selectedSupplier.lastOrder}</p>
+                  </div>
+                  <div>
+                    <Label>Next Delivery</Label>
+                    <p className="text-sm text-muted-foreground">{selectedSupplier.nextDelivery}</p>
+                  </div>
+                  <div>
+                    <Label>Pending Orders</Label>
+                    <p className="text-sm text-muted-foreground">{selectedSupplier.pendingOrders}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>
+                Close
+              </Button>
+              <Button>
+                Edit Supplier
+              </Button>
+            </div>
+          </div>
+        )}
       </SharedDialog>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -197,7 +287,11 @@ export default function SuppliersPage() {
                         <span className="text-sm">{supplier.pendingOrders} pending</span>
                       </div>
                     )}
-                    <Button variant="ghost" size="sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleViewSupplier(supplier)}
+                    >
                       View
                     </Button>
                   </div>
@@ -244,7 +338,11 @@ export default function SuppliersPage() {
                   >
                     {delivery.status}
                   </span>
-                  <Button variant="ghost" size="sm">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleTrackDelivery(delivery)}
+                  >
                     Track
                   </Button>
                 </div>

@@ -3,6 +3,7 @@ import './globals.css';
 import { ClientOnlyToaster } from '@/components/layout/ClientOnlyToaster';
 import { Inter } from "next/font/google";
 import { AIAssistantButton } from "@/components/layout/AIAssistantButton";
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
         {children}
         <ClientOnlyToaster />
         <AIAssistantButton />
+        <Toaster />
       </body>
     </html>
   );
