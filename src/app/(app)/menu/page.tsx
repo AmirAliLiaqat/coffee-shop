@@ -73,15 +73,15 @@ export default function MenuPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fadeIn">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold font-headline">Menu Management</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" size="icon" onClick={() => setViewMode(viewMode === "grid" ? "table" : "grid")}>
+        <h1 className="text-3xl font-bold font-headline animate-slideDown">Menu Management</h1>
+        <div className="flex gap-2 animate-fadeIn delay-100">
+          <Button variant="outline" size="icon" onClick={() => setViewMode(viewMode === "grid" ? "table" : "grid")} className="hover:scale-110 transition-transform duration-200">
             {viewMode === "grid" ? <List className="h-4 w-4" /> : <LayoutGrid className="h-4 w-4" />}
             <span className="sr-only">Toggle View Mode</span>
           </Button>
-          <Button onClick={handleAddNew}>
+          <Button onClick={handleAddNew} className="hover:scale-105 transition-transform duration-200">
             <PlusCircle className="mr-2 h-4 w-4" /> Add New Item
           </Button>
         </div>
@@ -94,6 +94,7 @@ export default function MenuPage() {
         description={editingItem ? "Update the details of the menu item." : "Fill in the details to add a new item to the menu."}
         size="lg"
         onClose={() => setIsDialogOpen(false)}
+        className="animate-scaleIn"
       >
         <AddMenuItemForm
           onSubmit={handleSubmit}
@@ -104,15 +105,15 @@ export default function MenuPage() {
 
       {viewMode === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {menuItems.map((item) => (
-            <Card key={item.id} className="flex flex-col">
+          {menuItems.map((item, index) => (
+            <Card key={item.id} className="flex flex-col animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
               <CardHeader className="p-0">
                 <Image
                   src={item.imageUrl || "https://placehold.co/300x200.png"}
                   alt={item.name}
                   width={300}
                   height={200}
-                  className="rounded-t-lg w-full object-cover aspect-[3/2]"
+                  className="rounded-t-lg w-full object-cover aspect-[3/2] hover:scale-105 transition-transform duration-300"
                   data-ai-hint={(item as any).dataAiHint || "food drink"}
                 />
               </CardHeader>
@@ -133,10 +134,10 @@ export default function MenuPage() {
                   />
                 </div>
                 <div className="flex gap-2 w-full">
-                  <Button variant="outline" size="sm" onClick={() => handleEdit(item)} className="flex-1">
+                  <Button variant="outline" size="sm" onClick={() => handleEdit(item)} className="flex-1 hover:scale-105 transition-transform duration-200">
                     <Edit className="mr-2 h-4 w-4" /> Edit
                   </Button>
-                  <Button variant="destructive" size="sm" onClick={() => handleDelete(item.id)} className="flex-1">
+                  <Button variant="destructive" size="sm" onClick={() => handleDelete(item.id)} className="flex-1 hover:scale-105 transition-transform duration-200">
                     <Trash2 className="mr-2 h-4 w-4" /> Delete
                   </Button>
                 </div>
@@ -145,29 +146,29 @@ export default function MenuPage() {
           ))}
         </div>
       ) : (
-        <Card>
+        <Card className="animate-slideUp">
           <CardContent className="pt-6">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[80px]">Image</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Availability</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead className="w-[80px] animate-fadeIn">Image</TableHead>
+                  <TableHead className="animate-fadeIn delay-75">Name</TableHead>
+                  <TableHead className="animate-fadeIn delay-100">Category</TableHead>
+                  <TableHead className="animate-fadeIn delay-150">Price</TableHead>
+                  <TableHead className="animate-fadeIn delay-200">Availability</TableHead>
+                  <TableHead className="animate-fadeIn delay-250">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {menuItems.map((item) => (
-                  <TableRow key={item.id}>
+                {menuItems.map((item, index) => (
+                  <TableRow key={item.id} className="animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
                     <TableCell>
                       <Image
                         src={item.imageUrl || "https://placehold.co/64x64.png"}
                         alt={item.name}
                         width={64}
                         height={64}
-                        className="rounded-md object-cover aspect-square"
+                        className="rounded-md object-cover aspect-square hover:scale-110 transition-transform duration-300"
                         data-ai-hint={(item as any).dataAiHint || "food drink"}
                       />
                     </TableCell>
@@ -183,10 +184,10 @@ export default function MenuPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="icon" onClick={() => handleEdit(item)} aria-label="Edit item">
+                        <Button variant="outline" size="icon" onClick={() => handleEdit(item)} aria-label="Edit item" className="hover:scale-110 transition-transform duration-200">
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="destructive" size="icon" onClick={() => handleDelete(item.id)} aria-label="Delete item">
+                        <Button variant="destructive" size="icon" onClick={() => handleDelete(item.id)} aria-label="Delete item" className="hover:scale-110 transition-transform duration-200">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>

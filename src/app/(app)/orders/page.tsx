@@ -128,10 +128,10 @@ export default function OrdersPage() {
 
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fadeIn">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold font-headline">Orders Management</h1>
-        <Button onClick={handleAddNewOrder}>
+        <h1 className="text-3xl font-bold font-headline animate-slideDown">Orders Management</h1>
+        <Button onClick={handleAddNewOrder} className="hover:scale-105 transition-transform duration-200">
           <PlusCircle className="mr-2 h-4 w-4" /> Add New Order
         </Button>
       </div>
@@ -143,6 +143,7 @@ export default function OrdersPage() {
         description="Fill in the details to create a new customer order."
         size="lg"
         onClose={() => setIsAddOrderDialogOpen(false)}
+        className="animate-scaleIn"
       >
         <AddOrderForm
           onSubmit={handleAddOrderSubmit}
@@ -158,9 +159,10 @@ export default function OrdersPage() {
         size="lg"
         showCloseButton={true}
         onClose={() => setIsViewOrderDialogOpen(false)}
+        className="animate-scaleIn"
       >
         {selectedOrder && (
-          <div className="space-y-3 py-4">
+          <div className="space-y-3 py-4 animate-fadeIn">
             <p><strong>Customer:</strong> {selectedOrder.customerName}</p>
             <p><strong>Items:</strong> {selectedOrder.items}</p>
             <p><strong>Total:</strong> {selectedOrder.totalAmount}</p>
@@ -181,9 +183,10 @@ export default function OrdersPage() {
         submitText="Update Status"
         showCloseButton={true}
         onClose={() => setIsUpdateStatusDialogOpen(false)}
+        className="animate-scaleIn"
       >
         {selectedOrder && (
-          <div className="py-4 space-y-4">
+          <div className="py-4 space-y-4 animate-fadeIn">
             <div className="grid gap-2">
               <Label htmlFor="status-update">New Status</Label>
               <Select value={statusToUpdate} onValueChange={(value) => setStatusToUpdate(value as OrderStatus)}>
@@ -201,12 +204,12 @@ export default function OrdersPage() {
         )}
       </SharedDialog>
 
-      <Card>
+      <Card className="animate-slideUp">
         <CardHeader>
-          <CardTitle>Current Orders</CardTitle>
-          <CardDescription>View and manage all customer orders.</CardDescription>
+          <CardTitle className="animate-fadeIn">Current Orders</CardTitle>
+          <CardDescription className="animate-fadeIn delay-100">View and manage all customer orders.</CardDescription>
           <div className="mt-4 flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
+            <div className="relative flex-1 animate-fadeIn delay-150">
               <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search by customer or ID..."
@@ -216,7 +219,7 @@ export default function OrdersPage() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px] animate-fadeIn delay-200">
                 <SelectValue placeholder="Filter by Status" />
               </SelectTrigger>
               <SelectContent>
@@ -227,7 +230,7 @@ export default function OrdersPage() {
               </SelectContent>
             </Select>
             <Select value={staffFilter} onValueChange={setStaffFilter}>
-              <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px] animate-fadeIn delay-250">
                 <SelectValue placeholder="Filter by Staff" />
               </SelectTrigger>
               <SelectContent>
@@ -244,6 +247,7 @@ export default function OrdersPage() {
                 setStatusFilter("all");
                 setStaffFilter("all");
               }}
+              className="animate-fadeIn delay-300 hover:scale-105 transition-transform duration-200"
             >
               <Filter className="mr-2 h-4 w-4" /> Reset Filters
             </Button>
@@ -253,18 +257,19 @@ export default function OrdersPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Items</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Assigned Staff</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="animate-fadeIn">Order ID</TableHead>
+                <TableHead className="animate-fadeIn delay-75">Customer</TableHead>
+                <TableHead className="animate-fadeIn delay-100">Items</TableHead>
+                <TableHead className="animate-fadeIn delay-150">Status</TableHead>
+                <TableHead className="animate-fadeIn delay-200">Total</TableHead>
+                <TableHead className="animate-fadeIn delay-250">Staff</TableHead>
+                <TableHead className="animate-fadeIn delay-300">Date</TableHead>
+                <TableHead className="animate-fadeIn delay-350">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredOrders.map((order) => (
-                <TableRow key={order.id}>
+              {filteredOrders.map((order, index) => (
+                <TableRow key={order.id} className="animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
                   <TableCell className="font-medium">{order.id}</TableCell>
                   <TableCell>{order.customerName}</TableCell>
                   <TableCell>{order.items}</TableCell>
@@ -275,12 +280,25 @@ export default function OrdersPage() {
                   </TableCell>
                   <TableCell>{order.totalAmount}</TableCell>
                   <TableCell>{order.assignedStaff}</TableCell>
+                  <TableCell>{order.orderDate}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="icon" aria-label="View Order" onClick={() => handleViewOrder(order)}>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleViewOrder(order)}
+                        aria-label="View order details"
+                        className="hover:scale-110 transition-transform duration-200"
+                      >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="icon" aria-label="Update Status" onClick={() => handleOpenUpdateStatusDialog(order)}>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleOpenUpdateStatusDialog(order)}
+                        aria-label="Update order status"
+                        className="hover:scale-110 transition-transform duration-200"
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
                     </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, BarChart2, PieChart, Users, Package, Loader2 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { DateRangePicker } from "@/components/reports/DateRangePicker";
 import type { DateRange } from "react-day-picker";
 import { ExampleChart } from "@/components/dashboard/ExampleChart";
@@ -150,11 +151,11 @@ export default function ReportsPage() {
     doc.save("coffee_shop_reports.pdf");
   };
 
-  const renderChart = (data: ChartData[] | null, title: string, description: string, dataKeyX: string, dataKeyY: string, fillColor: string, icon: LucideIcon) => {
+  const renderChart = (data: ChartData[] | null, title: string, description: string, dataKeyX: string, dataKeyY: string, fillColor: string, icon: LucideIcon, delay: number) => {
     const IconComponent = icon;
     if (!data) {
       return (
-        <Card>
+        <Card className="animate-fadeIn" style={{ animationDelay: `${delay}ms` }}>
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="font-headline">{title}</CardTitle>
@@ -169,7 +170,7 @@ export default function ReportsPage() {
       );
     }
     return (
-      <Card>
+      <Card className="animate-fadeIn" style={{ animationDelay: `${delay}ms` }}>
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="font-headline">{title}</CardTitle>
@@ -192,15 +193,15 @@ export default function ReportsPage() {
 
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fadeIn">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold font-headline">Sales &amp; Reports</h1>
-        <div className="flex gap-2">
+        <h1 className="text-3xl font-bold font-headline animate-slideDown">Sales &amp; Reports</h1>
+        <div className="flex gap-2 animate-fadeIn delay-100">
           <DateRangePicker onDateChange={handleDateChange} />
-          <Button variant="outline" onClick={exportToPDF}>
+          <Button variant="outline" onClick={exportToPDF} className="hover:scale-105 transition-transform duration-200">
             <Download className="mr-2 h-4 w-4" /> Export PDF
           </Button>
-          <Button variant="outline" onClick={exportToExcel}>
+          <Button variant="outline" onClick={exportToExcel} className="hover:scale-105 transition-transform duration-200">
             <Download className="mr-2 h-4 w-4" /> Export Excel
           </Button>
         </div>
@@ -214,7 +215,8 @@ export default function ReportsPage() {
           "item",
           "revenue",
           "hsl(var(--chart-4))",
-          BarChart2
+          BarChart2,
+          150
         )}
         {renderChart(
           revenueBreakdownData,
@@ -223,7 +225,8 @@ export default function ReportsPage() {
           "source",
           "amount",
           "hsl(var(--chart-5))",
-          PieChart
+          PieChart,
+          300
         )}
       </div>
 
@@ -235,7 +238,8 @@ export default function ReportsPage() {
           "item",
           "revenue",
           "hsl(var(--chart-6))",
-          Users
+          Users,
+          450
         )}
         {renderChart(
           inventoryUsageData,
@@ -244,7 +248,8 @@ export default function ReportsPage() {
           "item",
           "revenue",
           "hsl(var(--chart-7))",
-          Package
+          Package,
+          600
         )}
       </div>
     </div>

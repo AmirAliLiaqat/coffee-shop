@@ -29,7 +29,11 @@ const predictionSchema = z.object({
 
 type PredictionFormValues = z.infer<typeof predictionSchema>;
 
-export function InventoryPredictionForm() {
+interface InventoryPredictionFormProps {
+  className?: string;
+}
+
+export function InventoryPredictionForm({ className }: InventoryPredictionFormProps) {
   const form = useForm<PredictionFormValues>({
     resolver: zodResolver(predictionSchema),
     defaultValues: {
@@ -59,7 +63,7 @@ export function InventoryPredictionForm() {
   }
 
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle className="font-headline">AI Inventory Prediction</CardTitle>
         <CardDescription>

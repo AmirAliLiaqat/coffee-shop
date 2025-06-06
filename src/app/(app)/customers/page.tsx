@@ -56,31 +56,31 @@ export default function CustomersPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-3xl font-bold font-headline">Customer Management</h1>
+    <div className="flex flex-col gap-6 animate-fadeIn">
+      <h1 className="text-3xl font-bold font-headline animate-slideDown">Customer Management</h1>
 
-      <Card>
+      <Card className="animate-slideUp">
         <CardHeader>
-          <CardTitle>Customer List</CardTitle>
-          <CardDescription>View and manage your customer information.</CardDescription>
+          <CardTitle className="animate-fadeIn">Customer List</CardTitle>
+          <CardDescription className="animate-fadeIn delay-100">View and manage your customer information.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Customer ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Total Orders</TableHead>
-                <TableHead>Loyalty Points</TableHead>
-                <TableHead>Feedback</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="animate-fadeIn">Customer ID</TableHead>
+                <TableHead className="animate-fadeIn delay-75">Name</TableHead>
+                <TableHead className="animate-fadeIn delay-100">Email</TableHead>
+                <TableHead className="animate-fadeIn delay-150">Phone</TableHead>
+                <TableHead className="animate-fadeIn delay-200">Total Orders</TableHead>
+                <TableHead className="animate-fadeIn delay-250">Loyalty Points</TableHead>
+                <TableHead className="animate-fadeIn delay-300">Feedback</TableHead>
+                <TableHead className="animate-fadeIn delay-350">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {customers.map((customer) => (
-                <TableRow key={customer.id}>
+              {customers.map((customer, index) => (
+                <TableRow key={customer.id} className="animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
                   <TableCell className="font-medium">{customer.id}</TableCell>
                   <TableCell>{customer.name}</TableCell>
                   <TableCell>{customer.email}</TableCell>
@@ -95,6 +95,7 @@ export default function CustomersPage() {
                         size="icon"
                         onClick={() => handleSendEmail(customer)}
                         aria-label="Send Email"
+                        className="hover:scale-110 transition-transform duration-200"
                       >
                         <Mail className="h-4 w-4" />
                       </Button>
@@ -103,6 +104,7 @@ export default function CustomersPage() {
                         size="icon"
                         onClick={() => handleSendPromotion(customer)}
                         aria-label="Send Promotion"
+                        className="hover:scale-110 transition-transform duration-200"
                       >
                         <Gift className="h-4 w-4" />
                       </Button>
@@ -122,14 +124,16 @@ export default function CustomersPage() {
         description={`Write your email message below. It will be sent to ${selectedCustomer?.email}`}
         onSubmit={handleEmailSubmit}
         submitText="Send Email"
+        showCloseButton={true}
         onClose={() => setIsEmailDialogOpen(false)}
+        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <Textarea
             placeholder="Write your email message here..."
             value={emailContent}
             onChange={(e) => setEmailContent(e.target.value)}
-            className="min-h-[200px]"
+            className="min-h-[200px] animate-fadeIn"
           />
         </div>
       </SharedDialog>
@@ -141,14 +145,16 @@ export default function CustomersPage() {
         description={`Write your promotion message below. It will be sent to ${selectedCustomer?.email}`}
         onSubmit={handlePromotionSubmit}
         submitText="Send Promotion"
+        showCloseButton={true}
         onClose={() => setIsPromotionDialogOpen(false)}
+        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <Textarea
             placeholder="Write your promotion message here..."
             value={promotionContent}
             onChange={(e) => setPromotionContent(e.target.value)}
-            className="min-h-[200px]"
+            className="min-h-[200px] animate-fadeIn"
           />
         </div>
       </SharedDialog>

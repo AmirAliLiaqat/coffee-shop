@@ -89,10 +89,10 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fadeIn">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold font-headline">Inventory Management</h1>
-        <Button onClick={handleAddNew}>
+        <h1 className="text-3xl font-bold font-headline animate-slideDown">Inventory Management</h1>
+        <Button onClick={handleAddNew} className="hover:scale-105 transition-transform duration-200">
           <PlusCircle className="mr-2 h-4 w-4" /> Add New Item
         </Button>
       </div>
@@ -104,6 +104,7 @@ export default function InventoryPage() {
         description={editingItem ? "Update the details of the inventory item." : "Fill in the details to add a new item to inventory."}
         size="lg"
         onClose={() => setIsFormOpen(false)}
+        className="animate-scaleIn"
       >
         <AddInventoryItemForm
           onSubmit={handleSubmit}
@@ -119,8 +120,9 @@ export default function InventoryPage() {
         description={`Add stock to ${selectedItem?.itemName}`}
         onSubmit={handleStockUpdate}
         submitText="Add Stock"
+        className="animate-scaleIn"
       >
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 py-4 animate-fadeIn">
           <div className="grid gap-2">
             <Label htmlFor="quantity">Quantity to Add</Label>
             <Input
@@ -134,26 +136,26 @@ export default function InventoryPage() {
         </div>
       </SharedDialog>
 
-      <Card>
+      <Card className="animate-slideUp">
         <CardHeader>
-          <CardTitle>Current Stock</CardTitle>
-          <CardDescription>Track and manage your inventory levels.</CardDescription>
+          <CardTitle className="animate-fadeIn">Current Stock</CardTitle>
+          <CardDescription className="animate-fadeIn delay-100">Track and manage your inventory levels.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Item Name</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>Unit</TableHead>
-                <TableHead>Supplier</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="animate-fadeIn">Item Name</TableHead>
+                <TableHead className="animate-fadeIn delay-75">Quantity</TableHead>
+                <TableHead className="animate-fadeIn delay-100">Unit</TableHead>
+                <TableHead className="animate-fadeIn delay-150">Supplier</TableHead>
+                <TableHead className="animate-fadeIn delay-200">Status</TableHead>
+                <TableHead className="animate-fadeIn delay-250">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {inventoryItems.map((item) => (
-                <TableRow key={item.id}>
+              {inventoryItems.map((item, index) => (
+                <TableRow key={item.id} className="animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
                   <TableCell className="font-medium">{item.itemName}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell>{item.unit}</TableCell>
@@ -169,7 +171,7 @@ export default function InventoryPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="icon" onClick={() => handleEdit(item)} aria-label="Edit Item">
+                      <Button variant="outline" size="icon" onClick={() => handleEdit(item)} aria-label="Edit Item" className="hover:scale-110 transition-transform duration-200">
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button
@@ -177,10 +179,11 @@ export default function InventoryPage() {
                         size="icon"
                         onClick={() => handleAddStock(item)}
                         aria-label="Add Stock"
+                        className="hover:scale-110 transition-transform duration-200"
                       >
                         <PackagePlus className="h-4 w-4" />
                       </Button>
-                      <Button variant="destructive" size="icon" onClick={() => handleDelete(item.id)} aria-label="Delete Item">
+                      <Button variant="destructive" size="icon" onClick={() => handleDelete(item.id)} aria-label="Delete Item" className="hover:scale-110 transition-transform duration-200">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -192,7 +195,7 @@ export default function InventoryPage() {
         </CardContent>
       </Card>
 
-      <InventoryPredictionForm />
+      <InventoryPredictionForm className="animate-fadeIn delay-300" />
     </div>
   );
 }

@@ -112,3 +112,45 @@
     @apply font-headline;
   }
 }
+
+/* Custom border color for form elements */
+.border-input {
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Make borders more visible on hover and focus */
+input:hover,
+select:hover,
+button:hover,
+textarea:hover {
+  border-color: hsl(var(--border)) !important;
+}
+
+input:focus,
+select:focus,
+button:focus,
+textarea:focus {
+  border-color: hsl(var(--ring)) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1px hsl(var(--ring)) !important;
+  ring-offset: 0 !important;
+}
+
+/* Remove ring offset from all form elements */
+input,
+select,
+button,
+textarea,
+[type="button"],
+[type="reset"],
+[type="submit"],
+[type="text"],
+[type="email"],
+[type="password"],
+[type="number"],
+[type="search"],
+[type="tel"],
+[type="url"] {
+  ring-offset: 0 !important;
+  outline-offset: 0 !important;
+}
