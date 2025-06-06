@@ -13,6 +13,7 @@ import {
   Calendar,
   MessageSquare,
   Truck,
+  Bot,
   type LucideIcon,
 } from "lucide-react";
 
@@ -36,6 +37,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/reports", label: "Sales Reports", icon: LineChart },
   { href: "/suppliers", label: "Suppliers", icon: Truck },
   { href: "/feedback", label: "Customer Feedback", icon: MessageSquare },
+  { href: "/ai-assistant", label: "AI Assistant", icon: Bot },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
