@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -30,7 +29,7 @@ const Offer = () => {
           <CardContent className="p-0">
             <h1 className="text-5xl mt-3 font-bold">50% OFF</h1>
             <h1 className="text-white text-4xl my-3 font-bold">Sunday Special Offer</h1>
-            <h4 className="text-white font-normal mb-8 pb-8 text-lg">Only for Sunday from 1st Jan to 30th Jan 2045</h4>
+            <h4 className="text-white font-normal mb-2 pb-8 text-lg">Only for Sunday from 1st Jan to 30th Jan 2045</h4>
             <form className="flex justify-center mb-8">
               <div className="flex max-w-md w-full gap-1">
                 <Input

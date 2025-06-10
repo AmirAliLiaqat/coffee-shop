@@ -15,7 +15,8 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Store } from "lucide-react"; // Changed from CoffeeIcon
+import { Store } from "lucide-react";
+import { UserNav } from "./UserNav";
 
 export function SidebarNav() {
   const pathname = usePathname();
@@ -48,7 +49,9 @@ export function SidebarNav() {
         <SidebarMenu>{NAV_ITEMS.map(renderNavItem)}</SidebarMenu>
       </SidebarContent>
       <SidebarSeparator />
-      <SidebarFooter className="p-2">
+      <SidebarFooter className="p-2 space-y-2">
+        <UserNav />
+        <SidebarSeparator />
         <SidebarMenu>{FOOTER_NAV_ITEMS.map(renderNavItem)}</SidebarMenu>
       </SidebarFooter>
     </Sidebar>

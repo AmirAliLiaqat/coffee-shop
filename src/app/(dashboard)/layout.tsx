@@ -1,6 +1,7 @@
-import { Header } from "@/components/layout/Header";
-import { SidebarNav } from "@/components/layout/SidebarNav";
+import { Header } from "@/components/dashboard/layout/Header";
+import { SidebarNav } from "@/components/dashboard/layout/SidebarNav";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AIAssistantButton } from "@/components/dashboard/layout/AIAssistantButton";
 
 export default function AppLayout({
   children,
@@ -18,6 +19,7 @@ export default function AppLayout({
           </main>
         </SidebarInset>
       </div>
+      <AIAssistantButton />
     </SidebarProvider>
   );
 }

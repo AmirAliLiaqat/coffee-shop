@@ -3,6 +3,17 @@
 @tailwind utilities;
 
 @layer base {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  * {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
   :root {
     --background: 39 77% 96%; /* Light Cream/Beige - #FAF6F0 */
     --foreground: 28 45% 31%; /* Dark Brown - #6F5B4F */

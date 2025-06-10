@@ -13,13 +13,13 @@ const Carousel = () => {
       image: "https://demo.htmlcodex.com/1528/coffee-shop-html-template/img/bg.jpg",
       title: "Hi Welcome",
       subtitle: "COFFEE",
-      year: "SINCE 1950"
+      year: "SINCE 2025"
     },
     {
       image: "https://demo.htmlcodex.com/1528/coffee-shop-html-template/img/bg.jpg",
       title: "We Have Been Serving",
       subtitle: "COFFEE",
-      year: "SINCE 1950"
+      year: "SINCE 2025"
     }
   ]
 
@@ -45,7 +45,7 @@ const Carousel = () => {
                 alt="Coffee shop"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-40" />
+              <div className="absolute inset-0 bg-gray-900 bg-opacity-75" />
               <Card className="absolute inset-0 bg-transparent border-none shadow-none">
                 <CardContent className="flex flex-col items-center justify-center text-center h-full">
                   <h2 className="text-amber-500 font-medium text-2xl mb-2">{slide.title}</h2>

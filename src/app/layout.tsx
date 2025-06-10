@@ -1,14 +1,12 @@
 import type { Metadata } from 'next';
-import './globals.css';
-import { ClientOnlyToaster } from '@/components/layout/ClientOnlyToaster';
+import { ClientOnlyToaster } from '@/components/dashboard/layout/ClientOnlyToaster';
 import { Inter } from "next/font/google";
-import { AIAssistantButton } from "@/components/layout/AIAssistantButton";
-import { Toaster } from "@/components/ui/toaster"
+import './globals.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'BrewControl Coffee Shop',
+  title: 'Coffee Shop',
   description: 'Your favorite place for coffee and pastries.',
 };
 
@@ -27,8 +25,6 @@ export default function RootLayout({
       <body className={inter.className} suppressHydrationWarning>
         {children}
         <ClientOnlyToaster />
-        <AIAssistantButton />
-        <Toaster />
       </body>
     </html>
   );

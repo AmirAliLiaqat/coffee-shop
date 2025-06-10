@@ -1,9 +1,9 @@
 'use client'
 
-import React from 'react'
+import { useCallback } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import useEmblaCarousel from 'embla-carousel-react'
 
 // Define the testimonial data type
 interface TestimonialData {
@@ -108,11 +108,11 @@ const Testimonial = ({
     slidesToScroll: 1,
   })
 
-  const scrollPrev = React.useCallback(() => {
+  const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev()
   }, [emblaApi])
 
-  const scrollNext = React.useCallback(() => {
+  const scrollNext = useCallback(() => {
     if (emblaApi) emblaApi.scrollNext()
   }, [emblaApi])
 

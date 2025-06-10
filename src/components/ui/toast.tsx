@@ -3,7 +3,9 @@
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
-import { X } from "lucide-react"
+import { X, CheckCircle2, XCircle } from "lucide-react"
+import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 
 import { cn } from "@/lib/utils"
 
@@ -43,7 +45,7 @@ const toastVariants = cva(
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
+  VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
   return (
     <ToastPrimitives.Root
@@ -115,6 +117,42 @@ ToastDescription.displayName = ToastPrimitives.Description.displayName
 type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
 
 type ToastActionElement = React.ReactElement<typeof ToastAction>
+
+interface NotificationToastProps {
+  message: string;
+  type: "success" | "error";
+  onClose: () => void;
+}
+
+export function NotificationToast({ message, type, onClose }: NotificationToastProps) {
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+      setTimeout(onClose, 300); // Wait for fade out animation
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  if (!isVisible) return null;
+
+  return createPortal(
+    <div
+      className={`fixed bottom-4 right-4 p-4 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in ${type === "success" ? "bg-green-500" : "bg-red-500"
+        } text-white`}
+    >
+      {type === "success" ? (
+        <CheckCircle2 className="w-5 h-5" />
+      ) : (
+        <XCircle className="w-5 h-5" />
+      )}
+      <span>{message}</span>
+    </div>,
+    document.body
+  );
+}
 
 export {
   type ToastProps,
