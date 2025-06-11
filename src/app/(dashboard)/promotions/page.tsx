@@ -68,11 +68,11 @@ export default function PromotionsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fadeIn">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Promotions</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Promotions</h1>
+          <p className="text-muted-foreground animate-fadeIn delay-100">
             Manage special offers and discounts for your customers.
           </p>
         </div>
@@ -84,6 +84,7 @@ export default function PromotionsPage() {
           onSubmit={() => setIsDialogOpen(false)}
           submitText="Create Promotion"
           onClose={handleCancel}
+          className="animate-scaleIn"
         >
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
@@ -165,8 +166,8 @@ export default function PromotionsPage() {
         </SharedDialog>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-slideUp">
+        <Card className="animate-fadeIn">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Promotions</CardTitle>
             <Tag className="h-4 w-4 text-muted-foreground" />
@@ -179,7 +180,7 @@ export default function PromotionsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fadeIn delay-75">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Redemptions</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -192,7 +193,7 @@ export default function PromotionsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fadeIn delay-100">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Revenue Impact</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -205,7 +206,7 @@ export default function PromotionsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fadeIn delay-150">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Expiring Soon</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -219,8 +220,8 @@ export default function PromotionsPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 animate-slideUp">
+        <Card className="col-span-4 animate-fadeIn delay-200">
           <CardHeader>
             <CardTitle>Active Promotions</CardTitle>
             <CardDescription>
@@ -254,10 +255,11 @@ export default function PromotionsPage() {
                   duration: "Until Aug 15",
                   usage: "123 redemptions",
                 },
-              ].map((promo) => (
+              ].map((promo, index) => (
                 <div
                   key={promo.name}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className="flex items-center justify-between p-4 border rounded-lg animate-fadeIn"
+                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
                   <div className="space-y-1">
                     <h4 className="font-medium">{promo.name}</h4>
@@ -285,7 +287,7 @@ export default function PromotionsPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3">
+        <Card className="col-span-3 animate-fadeIn delay-250">
           <CardHeader>
             <CardTitle>Promotion History</CardTitle>
             <CardDescription>

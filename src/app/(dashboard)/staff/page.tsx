@@ -77,10 +77,10 @@ export default function StaffPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fadeIn">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold font-headline">Staff Management</h1>
-        <Button onClick={handleAddNew}>
+        <h1 className="text-3xl font-bold font-headline animate-slideDown">Staff Management</h1>
+        <Button onClick={handleAddNew} className="hover:scale-105 transition-transform duration-200">
           <PlusCircle className="mr-2 h-4 w-4" /> Add Staff Member
         </Button>
       </div>
@@ -91,6 +91,7 @@ export default function StaffPage() {
         onOpenChange={setIsFormOpen}
         title={editingStaff ? "Edit Staff Member" : "Add New Staff Member"}
         description={editingStaff ? "Update the staff member's details." : "Fill in the details for the new staff member."}
+        className="animate-scaleIn"
       >
         <AddStaffForm
           onSubmit={handleSubmit}
@@ -104,26 +105,26 @@ export default function StaffPage() {
         />
       </SharedDialog>
 
-      <Card>
+      <Card className="animate-slideUp">
         <CardHeader>
-          <CardTitle>Staff List</CardTitle>
-          <CardDescription>Manage your team members.</CardDescription>
+          <CardTitle className="animate-fadeIn">Staff List</CardTitle>
+          <CardDescription className="animate-fadeIn delay-100">Manage your team members.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Contact Info</TableHead>
-                <TableHead>Shift Timing</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="animate-fadeIn">Name</TableHead>
+                <TableHead className="animate-fadeIn delay-75">Role</TableHead>
+                <TableHead className="animate-fadeIn delay-100">Contact Info</TableHead>
+                <TableHead className="animate-fadeIn delay-150">Shift Timing</TableHead>
+                <TableHead className="animate-fadeIn delay-200">Status</TableHead>
+                <TableHead className="animate-fadeIn delay-250">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {staffList.map((staff) => (
-                <TableRow key={staff.id}>
+              {staffList.map((staff, index) => (
+                <TableRow key={staff.id} className="animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
                   <TableCell className="font-medium">{staff.name}</TableCell>
                   <TableCell>{staff.role}</TableCell>
                   <TableCell>
@@ -141,10 +142,10 @@ export default function StaffPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="icon" onClick={() => handleEdit(staff)} aria-label="Edit Staff">
+                      <Button variant="outline" size="icon" onClick={() => handleEdit(staff)} aria-label="Edit Staff" className="hover:scale-110 transition-transform duration-200">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="destructive" size="icon" onClick={() => toggleStatus(staff.id)} aria-label={staff.status === "Active" ? "Deactivate Staff" : "Activate Staff"}>
+                      <Button variant="destructive" size="icon" onClick={() => toggleStatus(staff.id)} aria-label={staff.status === "Active" ? "Deactivate Staff" : "Activate Staff"} className="hover:scale-110 transition-transform duration-200">
                         <UserX className="h-4 w-4" />
                       </Button>
                     </div>

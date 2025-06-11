@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Truck, Coffee, Award, Calendar } from "lucide-react"
 
 const Service = () => {
   return (
-    <div className="w-full py-20">
+    <div className="w-full py-10 md:py-16 lg:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h4 className="uppercase tracking-widest font-medium">Our Services</h4>
-          <h1 className="text-4xl font-bold mt-2 text-gray-900">Fresh & Organic Beans</h1>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mt-2 text-gray-900">Fresh & Organic Beans</h1>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card className="hover:shadow-xl transition-shadow">

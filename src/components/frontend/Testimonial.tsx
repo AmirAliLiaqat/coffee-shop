@@ -117,7 +117,7 @@ const Testimonial = ({
   }, [emblaApi])
 
   return (
-    <div className="w-full py-20">
+    <div className="w-full py-12 sm:py-16 md:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h4 className="uppercase tracking-widest font-medium text-primary">{subtitle}</h4>

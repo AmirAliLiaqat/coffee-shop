@@ -11,12 +11,14 @@ export default function AppLayout({
   return (
     <SidebarProvider defaultOpen={true}>
       <SidebarNav />
-      <div className="flex flex-col flex-1 min-h-screen">
+      <div className="flex flex-col flex-1 min-h-screen overflow-x-hidden">
         <Header />
         <SidebarInset>
-          <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto">
-            {children}
-          </main>
+          <div className="h-full w-full">
+            <main className="h-full w-full p-4 md:p-6 lg:p-8">
+              {children}
+            </main>
+          </div>
         </SidebarInset>
       </div>
       <AIAssistantButton />

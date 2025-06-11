@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from '../ui/button';
 import { useRouter } from "next/navigation";
@@ -25,6 +26,13 @@ interface MenuSectionProps {
 const MenuItem: React.FC<MenuItemProps> = ({ id, name, description, price, imageUrl, alt }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const [isInWishlist, setIsInWishlist] = useState(false);
+
+  useEffect(() => {
+    // Check if product is in wishlist
+    const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    setIsInWishlist(wishlist.some((item: any) => item.id === id));
+  }, [id]);
 
   const addToCart = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click when clicking the button
@@ -44,14 +52,22 @@ const MenuItem: React.FC<MenuItemProps> = ({ id, name, description, price, image
     });
   };
 
-  const addToWishlist = (e: React.MouseEvent) => {
+  const toggleWishlist = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click when clicking the button
     const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-    const existingItem = wishlist.find((item: any) => item.id === id);
 
-    if (!existingItem) {
+    if (isInWishlist) {
+      const updatedWishlist = wishlist.filter((item: any) => item.id !== id);
+      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      setIsInWishlist(false);
+      toast({
+        title: "Removed from Wishlist",
+        description: `${name} has been removed from your wishlist.`,
+      });
+    } else {
       wishlist.push({ id, name, price, image: imageUrl });
       localStorage.setItem("wishlist", JSON.stringify(wishlist));
+      setIsInWishlist(true);
       toast({
         title: "Added to Wishlist",
         description: `${name} has been added to your wishlist.`,
@@ -80,8 +96,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ id, name, description, price, image
         onClick={handleCardClick}
       >
         <CardContent className="p-6">
-          <div className="flex items-center gap-6">
-            <div className="w-1/3 relative group">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="w-full md:w-1/3 relative group">
               <div className="absolute inset-0 bg-black/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <img
                 className="w-full h-40 object-cover rounded-xl shadow-lg"
@@ -89,23 +105,23 @@ const MenuItem: React.FC<MenuItemProps> = ({ id, name, description, price, image
                 alt={alt}
               />
             </div>
-            <div className="w-2/3">
+            <div className="w-full md:w-2/3">
               <h4 className="text-2xl font-bold mb-2">{name}</h4>
               <p className="text-gray-600 leading-relaxed">{description}</p>
-              <div className="flex items-center justify-between mt-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 gap-4">
                 <h5 className="text-2xl font-bold">${price}</h5>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full sm:w-auto">
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={addToWishlist}
-                    className="hover:scale-110 transition-transform"
+                    onClick={toggleWishlist}
+                    className={`hover:scale-110 transition-transform ${isInWishlist ? "text-red-500" : ""}`}
                   >
-                    <Heart className="h-4 w-4" />
+                    <Heart className="h-4 w-4" fill={isInWishlist ? "currentColor" : "none"} />
                   </Button>
                   <Button
                     onClick={addToCart}
-                    className="hover:scale-105 transition-transform"
+                    className="hover:scale-105 transition-transform flex-1 sm:flex-none"
                   >
                     <ShoppingCart className="h-4 w-4 mr-2" />
                     Add to Cart
@@ -195,11 +211,11 @@ const menuData = {
 // Main Menu Component
 const Shop = () => {
   return (
-    <div className="w-full py-24">
+    <div className="w-full py-12 md:py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20 animate-slideDown">
           <h4 className="uppercase tracking-widest font-medium">Menu & Pricing</h4>
-          <h1 className="text-5xl font-bold mt-4 text-gray-900">Our Signature Drinks</h1>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mt-4 text-gray-900">Our Signature Drinks</h1>
           <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
             Discover our carefully crafted selection of premium coffee beverages,
             each prepared with the finest ingredients and served with passion.

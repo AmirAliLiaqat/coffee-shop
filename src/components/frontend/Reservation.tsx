@@ -6,7 +6,7 @@ import { Check } from "lucide-react"
 
 const Reservation = () => {
   return (
-    <div className="w-full my-20">
+    <div className="w-full my-8 md:my-12 lg:my-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Card className="relative">
           {/* Top Overlay */}

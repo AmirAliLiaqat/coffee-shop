@@ -1,5 +1,6 @@
 import Navbar from "@/components/frontend/layout/Navbar";
 import Footer from "@/components/frontend/layout/Footer";
+import { BackToTop } from "@/components/frontend/back-to-top";
 
 export default function FrontendLayout({
   children,
@@ -13,6 +14,7 @@ export default function FrontendLayout({
         {children}
       </main>
       <Footer />
+      <BackToTop />
     </>
   );
 } 

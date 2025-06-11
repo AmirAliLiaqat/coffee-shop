@@ -1,4 +1,4 @@
-import React from 'react';
+import Link from 'next/link';
 
 interface PageHeaderProps {
   title: string;
@@ -21,12 +21,12 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, pathName, pathLink }) =>
         </h1>
         <div className="mb-5 flex items-center justify-center text-white lg:mb-12">
           <p className="text-white mr-2">
-            Home /
+            <Link href="/" className="text-white hover:text-gray-300">Home</Link> /
           </p>
           <p className="m-0">
-            <a className="text-white hover:text-gray-300" href={pathLink}>
+            <Link href={pathLink} className="text-white hover:text-gray-300">
               {pathName}
-            </a>
+            </Link>
           </p>
         </div>
       </div>

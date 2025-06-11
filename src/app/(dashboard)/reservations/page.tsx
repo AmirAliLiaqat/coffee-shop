@@ -64,11 +64,11 @@ export default function ReservationsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fadeIn">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Reservations</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Reservations</h1>
+          <p className="text-muted-foreground animate-fadeIn delay-100">
             Manage table reservations and seating arrangements.
           </p>
         </div>
@@ -80,6 +80,7 @@ export default function ReservationsPage() {
           onSubmit={() => setIsDialogOpen(false)}
           submitText="Create Reservation"
           onClose={handleCancel}
+          className="animate-scaleIn"
         >
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
@@ -155,8 +156,8 @@ export default function ReservationsPage() {
         </SharedDialog>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 animate-slideUp">
+        <Card className="animate-fadeIn">
           <CardHeader>
             <CardTitle>Today's Overview</CardTitle>
             <CardDescription>
@@ -190,7 +191,7 @@ export default function ReservationsPage() {
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2">
+        <Card className="md:col-span-2 animate-fadeIn delay-75">
           <CardHeader>
             <CardTitle>Today's Reservations</CardTitle>
             <CardDescription>
@@ -199,10 +200,11 @@ export default function ReservationsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {todayReservations.map((reservation) => (
+              {todayReservations.map((reservation, index) => (
                 <div
                   key={reservation.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className="flex items-center justify-between p-4 border rounded-lg animate-fadeIn"
+                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
                   <div className="space-y-1">
                     <p className="font-medium">{reservation.customerName}</p>
@@ -241,7 +243,7 @@ export default function ReservationsPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="animate-fadeIn delay-150">
         <CardHeader>
           <CardTitle>Floor Plan</CardTitle>
           <CardDescription>

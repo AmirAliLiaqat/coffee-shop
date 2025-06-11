@@ -38,10 +38,10 @@ const Footer = () => {
               <h4 className="text-white text-2xl font-bold mb-6">Follow Us</h4>
               <p className="mb-4 text-white/90">Amet elitr vero magna sed ipsum sit kasd sea elitr lorem rebum</p>
               <div className="flex space-x-2">
-                <a className="w-12 h-12 flex items-center justify-center border border-white/90 rounded hover:bg-white hover:text-gray-900 transition-colors" href="#"><Twitter className="h-5 w-5" /></a>
-                <a className="w-12 h-12 flex items-center justify-center border border-white/90 rounded hover:bg-white hover:text-gray-900 transition-colors" href="#"><Facebook className="h-5 w-5" /></a>
-                <a className="w-12 h-12 flex items-center justify-center border border-white/90 rounded hover:bg-white hover:text-gray-900 transition-colors" href="#"><Linkedin className="h-5 w-5" /></a>
-                <a className="w-12 h-12 flex items-center justify-center border border-white/90 rounded hover:bg-white hover:text-gray-900 transition-colors" href="#"><Instagram className="h-5 w-5" /></a>
+                <a className="w-12 h-12 flex items-center justify-center border border-white/90 rounded text-white hover:bg-white hover:text-gray-900 transition-colors" href="#"><Twitter className="h-5 w-5" /></a>
+                <a className="w-12 h-12 flex items-center justify-center border border-white/90 rounded text-white hover:bg-white hover:text-gray-900 transition-colors" href="#"><Facebook className="h-5 w-5" /></a>
+                <a className="w-12 h-12 flex items-center justify-center border border-white/90 rounded text-white hover:bg-white hover:text-gray-900 transition-colors" href="#"><Linkedin className="h-5 w-5" /></a>
+                <a className="w-12 h-12 flex items-center justify-center border border-white/90 rounded text-white hover:bg-white hover:text-gray-900 transition-colors" href="#"><Instagram className="h-5 w-5" /></a>
               </div>
             </div>
             <div>

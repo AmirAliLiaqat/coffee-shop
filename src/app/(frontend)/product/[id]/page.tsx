@@ -132,7 +132,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 animate-fadeIn">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left Column - Product Image */}
         <div className="space-y-6">
@@ -140,26 +140,26 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-[500px] object-cover rounded-2xl shadow-xl"
+              className="w-full h-[500px] object-cover rounded-2xl shadow-xl transition-transform duration-300 group-hover:scale-[1.02]"
             />
-            <div className="absolute inset-0 bg-black/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-accent/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleWishlist}
-              className={`absolute top-4 right-4 ${isInWishlist ? "text-red-500" : "text-white"
-                } hover:scale-110 transition-transform bg-black/20 hover:bg-black/30`}
+              className={`absolute top-4 right-4 ${isInWishlist ? "text-destructive" : "text-accent-foreground"} 
+                hover:scale-110 transition-transform bg-accent/20 hover:bg-accent/30`}
             >
               <Heart className="w-6 h-6" fill={isInWishlist ? "currentColor" : "none"} />
             </Button>
           </div>
 
-          {/* Product Gallery (Placeholder) */}
+          {/* Product Gallery */}
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="aspect-square rounded-lg bg-gray-100 cursor-pointer hover:opacity-80 transition-opacity"
+                className="aspect-square rounded-lg bg-secondary/50 cursor-pointer hover:opacity-80 transition-all duration-300 hover:scale-105"
               />
             ))}
           </div>
@@ -169,61 +169,61 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
         <div className="space-y-8">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
+              <span className="px-3 py-1 bg-secondary/50 rounded-full text-sm text-secondary-foreground">
                 {product.category}
               </span>
-              <div className="flex items-center gap-1 text-yellow-400">
+              <div className="flex items-center gap-1 text-accent">
                 <Star className="w-4 h-4 fill-current" />
-                <span className="text-gray-600">{product.rating}</span>
-                <span className="text-gray-400">({product.reviews} reviews)</span>
+                <span className="text-foreground">{product.rating}</span>
+                <span className="text-muted-foreground">({product.reviews} reviews)</span>
               </div>
             </div>
-            <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
-            <p className="text-3xl font-bold text-gray-900">${product.price}</p>
+            <h1 className="text-4xl font-headline font-bold mb-2 text-foreground">{product.name}</h1>
+            <p className="text-3xl font-bold text-primary">${product.price}</p>
           </div>
 
-          <p className="text-gray-600 leading-relaxed">{product.description}</p>
+          <p className="text-muted-foreground leading-relaxed">{product.description}</p>
 
           {/* Product Specifications */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <Clock className="w-5 h-5 text-gray-500" />
+            <div className="flex items-center gap-2 p-3 bg-secondary/30 rounded-lg transition-colors hover:bg-secondary/40">
+              <Clock className="w-5 h-5 text-primary" />
               <div>
-                <p className="text-sm text-gray-500">Prep Time</p>
-                <p className="font-medium">{product.preparationTime}</p>
+                <p className="text-sm text-muted-foreground">Prep Time</p>
+                <p className="font-medium text-foreground">{product.preparationTime}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <Thermometer className="w-5 h-5 text-gray-500" />
+            <div className="flex items-center gap-2 p-3 bg-secondary/30 rounded-lg transition-colors hover:bg-secondary/40">
+              <Thermometer className="w-5 h-5 text-primary" />
               <div>
-                <p className="text-sm text-gray-500">Temperature</p>
-                <p className="font-medium">{product.temperature}</p>
+                <p className="text-sm text-muted-foreground">Temperature</p>
+                <p className="font-medium text-foreground">{product.temperature}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <Coffee className="w-5 h-5 text-gray-500" />
+            <div className="flex items-center gap-2 p-3 bg-secondary/30 rounded-lg transition-colors hover:bg-secondary/40">
+              <Coffee className="w-5 h-5 text-primary" />
               <div>
-                <p className="text-sm text-gray-500">Size</p>
-                <p className="font-medium">{product.size}</p>
+                <p className="text-sm text-muted-foreground">Size</p>
+                <p className="font-medium text-foreground">{product.size}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-              <Droplet className="w-5 h-5 text-gray-500" />
+            <div className="flex items-center gap-2 p-3 bg-secondary/30 rounded-lg transition-colors hover:bg-secondary/40">
+              <Droplet className="w-5 h-5 text-primary" />
               <div>
-                <p className="text-sm text-gray-500">Calories</p>
-                <p className="font-medium">{product.nutritionalInfo?.calories} kcal</p>
+                <p className="text-sm text-muted-foreground">Calories</p>
+                <p className="font-medium text-foreground">{product.nutritionalInfo?.calories} kcal</p>
               </div>
             </div>
           </div>
 
           {/* Ingredients */}
           <div>
-            <h3 className="text-lg font-semibold mb-3">Ingredients</h3>
+            <h3 className="text-lg font-headline font-semibold mb-3 text-foreground">Ingredients</h3>
             <div className="flex flex-wrap gap-2">
               {product.ingredients?.map((ingredient, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600"
+                  className="px-3 py-1 bg-secondary/30 rounded-full text-sm text-foreground transition-colors hover:bg-secondary/40"
                 >
                   {ingredient}
                 </span>
@@ -233,23 +233,23 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
           {/* Nutritional Information */}
           <div>
-            <h3 className="text-lg font-semibold mb-3">Nutritional Information</h3>
+            <h3 className="text-lg font-headline font-semibold mb-3 text-foreground">Nutritional Information</h3>
             <div className="grid grid-cols-4 gap-4">
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-500">Calories</p>
-                <p className="font-medium">{product.nutritionalInfo?.calories}</p>
+              <div className="text-center p-3 bg-secondary/30 rounded-lg transition-colors hover:bg-secondary/40">
+                <p className="text-sm text-muted-foreground">Calories</p>
+                <p className="font-medium text-foreground">{product.nutritionalInfo?.calories}</p>
               </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-500">Protein</p>
-                <p className="font-medium">{product.nutritionalInfo?.protein}g</p>
+              <div className="text-center p-3 bg-secondary/30 rounded-lg transition-colors hover:bg-secondary/40">
+                <p className="text-sm text-muted-foreground">Protein</p>
+                <p className="font-medium text-foreground">{product.nutritionalInfo?.protein}g</p>
               </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-500">Carbs</p>
-                <p className="font-medium">{product.nutritionalInfo?.carbs}g</p>
+              <div className="text-center p-3 bg-secondary/30 rounded-lg transition-colors hover:bg-secondary/40">
+                <p className="text-sm text-muted-foreground">Carbs</p>
+                <p className="font-medium text-foreground">{product.nutritionalInfo?.carbs}g</p>
               </div>
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-500">Fat</p>
-                <p className="font-medium">{product.nutritionalInfo?.fat}g</p>
+              <div className="text-center p-3 bg-secondary/30 rounded-lg transition-colors hover:bg-secondary/40">
+                <p className="text-sm text-muted-foreground">Fat</p>
+                <p className="font-medium text-foreground">{product.nutritionalInfo?.fat}g</p>
               </div>
             </div>
           </div>
@@ -262,22 +262,22 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                   variant="outline"
                   size="icon"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="hover:scale-110 transition-transform"
+                  className="hover:scale-110 transition-transform border-input hover:border-primary"
                 >
                   -
                 </Button>
-                <span className="w-8 text-center">{quantity}</span>
+                <span className="w-8 text-center text-foreground">{quantity}</span>
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => setQuantity(quantity + 1)}
-                  className="hover:scale-110 transition-transform"
+                  className="hover:scale-110 transition-transform border-input hover:border-primary"
                 >
                   +
                 </Button>
               </div>
               <Button
-                className="flex-1 hover:scale-105 transition-transform"
+                className="flex-1 hover:scale-105 transition-transform bg-primary text-primary-foreground hover:bg-primary/90"
                 onClick={addToCart}
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
@@ -287,7 +287,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
             <Button
               variant="outline"
-              className="w-full hover:scale-105 transition-transform"
+              className="w-full hover:scale-105 transition-transform border-input hover:border-primary"
               onClick={() => router.push("/shop")}
             >
               Continue Shopping

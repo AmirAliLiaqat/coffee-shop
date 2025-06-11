@@ -25,20 +25,20 @@ export default function AnalyticsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fadeIn">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Analytics</h1>
+          <p className="text-muted-foreground animate-fadeIn delay-100">
             Detailed insights and analytics for your coffee shop business.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => setIsFilterOpen(true)}>
+          <Button variant="outline" onClick={() => setIsFilterOpen(true)} className="animate-fadeIn delay-150">
             <Filter className="mr-2 h-4 w-4" />
             Filter
           </Button>
-          <Button variant="outline" onClick={() => setIsExportOpen(true)}>
+          <Button variant="outline" onClick={() => setIsExportOpen(true)} className="animate-fadeIn delay-200">
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
@@ -54,6 +54,7 @@ export default function AnalyticsPage() {
         submitText="Apply Filters"
         showCloseButton={true}
         onClose={handleFilterCancel}
+        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
@@ -97,6 +98,7 @@ export default function AnalyticsPage() {
         submitText="Export"
         showCloseButton={true}
         onClose={() => setIsExportOpen(false)}
+        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
@@ -129,8 +131,8 @@ export default function AnalyticsPage() {
         </div>
       </SharedDialog>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-slideUp">
+        <Card className="animate-fadeIn">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -143,7 +145,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fadeIn delay-75">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Customers</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -156,7 +158,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fadeIn delay-100">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Coffee Sales</CardTitle>
             <Coffee className="h-4 w-4 text-muted-foreground" />
@@ -169,7 +171,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fadeIn delay-150">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Average Order Value</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -183,8 +185,8 @@ export default function AnalyticsPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 animate-slideUp">
+        <Card className="col-span-4 animate-fadeIn delay-200">
           <CardHeader>
             <CardTitle>Revenue Overview</CardTitle>
             <CardDescription>
@@ -198,7 +200,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3">
+        <Card className="col-span-3 animate-fadeIn delay-250">
           <CardHeader>
             <CardTitle>Top Selling Items</CardTitle>
             <CardDescription>
@@ -208,7 +210,11 @@ export default function AnalyticsPage() {
           <CardContent>
             <div className="space-y-4">
               {['Espresso', 'Cappuccino', 'Latte', 'Cold Brew', 'Croissant'].map((item, index) => (
-                <div key={item} className="flex items-center justify-between">
+                <div
+                  key={item}
+                  className="flex items-center justify-between animate-fadeIn"
+                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
+                >
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-primary" />
                     <span>{item}</span>

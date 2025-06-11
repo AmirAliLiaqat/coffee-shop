@@ -80,28 +80,28 @@ export default function FeedbackPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fadeIn">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Customer Feedback</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Customer Feedback</h1>
+          <p className="text-muted-foreground animate-fadeIn delay-100">
             Manage and respond to customer reviews and feedback.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => setIsFilterOpen(true)}>
+          <Button variant="outline" onClick={() => setIsFilterOpen(true)} className="animate-fadeIn delay-150">
             <Filter className="mr-2 h-4 w-4" />
             Filter
           </Button>
-          <Button variant="outline" onClick={() => setIsExportOpen(true)}>
+          <Button variant="outline" onClick={() => setIsExportOpen(true)} className="animate-fadeIn delay-200">
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-slideUp">
+        <Card className="animate-fadeIn">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Overall Rating</CardTitle>
             <Star className="h-4 w-4 text-muted-foreground" />
@@ -114,7 +114,7 @@ export default function FeedbackPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fadeIn delay-75">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Reviews</CardTitle>
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
@@ -127,7 +127,7 @@ export default function FeedbackPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fadeIn delay-100">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Response Rate</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -140,7 +140,7 @@ export default function FeedbackPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fadeIn delay-150">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Sentiment Analysis</CardTitle>
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
@@ -154,8 +154,8 @@ export default function FeedbackPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 animate-slideUp">
+        <Card className="col-span-4 animate-fadeIn delay-200">
           <CardHeader>
             <CardTitle>Recent Feedback</CardTitle>
             <CardDescription>
@@ -164,10 +164,11 @@ export default function FeedbackPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentFeedback.map((feedback) => (
+              {recentFeedback.map((feedback, index) => (
                 <div
                   key={feedback.id}
-                  className="flex items-start justify-between p-4 border rounded-lg"
+                  className="flex items-start justify-between p-4 border rounded-lg animate-fadeIn"
+                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -204,7 +205,7 @@ export default function FeedbackPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3">
+        <Card className="col-span-3 animate-fadeIn delay-250">
           <CardHeader>
             <CardTitle>Feedback Trends</CardTitle>
             <CardDescription>
@@ -228,6 +229,7 @@ export default function FeedbackPage() {
         submitText="Send Response"
         showCloseButton={true}
         onClose={handleReplyCancel}
+        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
@@ -268,6 +270,7 @@ export default function FeedbackPage() {
         submitText="Apply Filters"
         showCloseButton={true}
         onClose={handleFilterCancel}
+        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
@@ -318,6 +321,7 @@ export default function FeedbackPage() {
         submitText="Export"
         showCloseButton={true}
         onClose={handleExportCancel}
+        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">

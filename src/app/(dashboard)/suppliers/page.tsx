@@ -124,10 +124,10 @@ export default function SuppliersPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold font-headline">Suppliers</h1>
-        <Button onClick={() => setIsDialogOpen(true)}>
+        <h1 className="text-3xl font-bold font-headline animate-slideDown">Suppliers</h1>
+        <Button onClick={() => setIsDialogOpen(true)} className="animate-fadeIn delay-100">
           <Plus className="mr-2 h-4 w-4" /> Add Supplier
         </Button>
       </div>
@@ -138,6 +138,7 @@ export default function SuppliersPage() {
         onOpenChange={setIsDialogOpen}
         title="Add New Supplier"
         description="Add a new supplier to your vendor list."
+        className="animate-scaleIn"
       >
         <AddSupplierForm
           supplier={newSupplier}
@@ -153,6 +154,7 @@ export default function SuppliersPage() {
         onOpenChange={setIsViewDialogOpen}
         title={selectedSupplier?.name || "Supplier Details"}
         description="View supplier information and history"
+        className="animate-scaleIn"
       >
         {selectedSupplier && (
           <div className="space-y-6">
@@ -202,8 +204,8 @@ export default function SuppliersPage() {
         )}
       </SharedDialog>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 animate-slideUp">
+        <Card className="animate-fadeIn">
           <CardHeader>
             <CardTitle>Supplier Overview</CardTitle>
             <CardDescription>
@@ -237,7 +239,7 @@ export default function SuppliersPage() {
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2">
+        <Card className="md:col-span-2 animate-fadeIn delay-75">
           <CardHeader>
             <CardTitle>Active Suppliers</CardTitle>
             <CardDescription>
@@ -246,10 +248,11 @@ export default function SuppliersPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {suppliers.map((supplier) => (
+              {suppliers.map((supplier, index) => (
                 <div
                   key={supplier.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className="flex items-center justify-between p-4 border rounded-lg animate-fadeIn"
+                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -302,7 +305,7 @@ export default function SuppliersPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="animate-fadeIn delay-150">
         <CardHeader>
           <CardTitle>Upcoming Deliveries</CardTitle>
           <CardDescription>
@@ -311,10 +314,11 @@ export default function SuppliersPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {upcomingDeliveries.map((delivery) => (
+            {upcomingDeliveries.map((delivery, index) => (
               <div
                 key={delivery.id}
-                className="flex items-center justify-between p-4 border rounded-lg"
+                className="flex items-center justify-between p-4 border rounded-lg animate-fadeIn"
+                style={{ animationDelay: `${(index + 1) * 100}ms` }}
               >
                 <div className="space-y-1">
                   <p className="font-medium">{delivery.supplier}</p>

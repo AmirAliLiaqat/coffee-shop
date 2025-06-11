@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { LogOut } from "lucide-react";
+import { LogOut, LayoutDashboard, Home } from "lucide-react";
 
 export default function LogoutPage() {
   return (
@@ -19,7 +19,16 @@ export default function LogoutPage() {
           <LogOut className="h-16 w-16 text-primary" />
           <p>Thank you for using BrewControl!</p>
           <Button asChild>
-            <Link href="/dashboard">Return to Dashboard (Simulated)</Link>
+            <Link href="/dashboard" className="flex items-center gap-2">
+              <LayoutDashboard className="h-4 w-4" />
+              Return to Dashboard
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/" className="flex items-center gap-2">
+              <Home className="h-4 w-4" />
+              Return to Frontend
+            </Link>
           </Button>
           <p className="text-xs text-muted-foreground text-center mt-4">
             In a real application, you would be redirected to a login page or public homepage.
