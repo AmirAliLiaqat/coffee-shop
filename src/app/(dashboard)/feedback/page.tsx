@@ -1,11 +1,15 @@
 "use client";
 
+import * as XLSX from 'xlsx';
 import { useState } from "react";
+import { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
+import { Star, MessageSquare, TrendingUp, Download, Filter } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Star, MessageSquare, TrendingUp, Download, Filter } from "lucide-react";
 import { SharedDialog } from "@/components/ui/shared-dialog"
+import { ExportDialog } from "@/components/dashboard/shared/ExportDialog";
+import { exportToPDF } from "@/utils/pdf-export";
 
 interface Feedback {
   id: number;
@@ -15,6 +19,33 @@ interface Feedback {
   date: string;
   sentiment: string;
 }
+
+const recentFeedback = [
+  {
+    id: 1,
+    customerName: "Emily Chen",
+    rating: 5,
+    comment: "The new seasonal latte is amazing! Great atmosphere and friendly staff.",
+    date: "2024-03-15",
+    sentiment: "positive",
+  },
+  {
+    id: 2,
+    customerName: "David Wilson",
+    rating: 4,
+    comment: "Good coffee but the wait time was a bit long during peak hours.",
+    date: "2024-03-14",
+    sentiment: "neutral",
+  },
+  {
+    id: 3,
+    customerName: "Lisa Thompson",
+    rating: 2,
+    comment: "The pastries were stale and the service was slow.",
+    date: "2024-03-13",
+    sentiment: "negative",
+  },
+];
 
 export default function FeedbackPage() {
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
@@ -27,41 +58,10 @@ export default function FeedbackPage() {
     setIsFilterOpen(false);
   };
 
-  const handleExportCancel = () => {
-    setIsExportOpen(false);
-  };
-
   const handleReplyCancel = () => {
     setIsReplyOpen(false);
     setSelectedFeedback(null);
   };
-
-  const recentFeedback = [
-    {
-      id: 1,
-      customerName: "Emily Chen",
-      rating: 5,
-      comment: "The new seasonal latte is amazing! Great atmosphere and friendly staff.",
-      date: "2024-03-15",
-      sentiment: "positive",
-    },
-    {
-      id: 2,
-      customerName: "David Wilson",
-      rating: 4,
-      comment: "Good coffee but the wait time was a bit long during peak hours.",
-      date: "2024-03-14",
-      sentiment: "neutral",
-    },
-    {
-      id: 3,
-      customerName: "Lisa Thompson",
-      rating: 2,
-      comment: "The pastries were stale and the service was slow.",
-      date: "2024-03-13",
-      sentiment: "negative",
-    },
-  ];
 
   const renderStars = (rating: number) => {
     return (
@@ -79,16 +79,82 @@ export default function FeedbackPage() {
     );
   };
 
+  const exportToExcel = (data: any[]) => {
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
+
+    // Convert data to worksheet
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Customer Feedback");
+
+    // Generate Excel file
+    XLSX.writeFile(wb, "customer_feedback.xlsx");
+  };
+
+  const exportToCSV = (data: any[]) => {
+    // Convert data to CSV
+    const csv = XLSX.utils.json_to_sheet(data);
+    const csvContent = XLSX.utils.sheet_to_csv(csv);
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'customer_feedback.csv';
+    link.click();
+  };
+
+  const handleDateChange = (newDateRange: DateRange | undefined) => {
+    console.log('Date range changed:', newDateRange);
+  };
+
+  const handleExport = (type: 'pdf' | 'excel' | 'csv') => {
+    const feedbackData = recentFeedback.map(feedback => ({
+      ...feedback,
+      rating: feedback.rating.toString(),
+    }));
+
+    switch (type) {
+      case 'pdf':
+        exportToPDF({
+          title: "Customer Feedback",
+          subtitle: "Customer Feedback Report",
+          dateRange: dateRange,
+          sections: [
+            {
+              title: "Customer Feedback",
+              data: feedbackData,
+              columns: [
+                { header: 'Customer', dataKey: 'customerName' },
+                { header: 'Rating', dataKey: 'rating' },
+                { header: 'Comment', dataKey: 'comment' },
+                { header: 'Date', dataKey: 'date' },
+                { header: 'Sentiment', dataKey: 'sentiment' }
+              ]
+            }
+          ],
+          filename: "customer_feedback.pdf"
+        });
+        break;
+      case 'excel':
+        exportToExcel(feedbackData);
+        break;
+      case 'csv':
+        exportToCSV(feedbackData);
+        break;
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Customer Feedback</h1>
-          <p className="text-muted-foreground animate-fadeIn delay-100">
-            Manage and respond to customer reviews and feedback.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Customer Feedback</h1>
+        <p className="text-muted-foreground animate-fadeIn delay-100">
+          Manage and respond to customer reviews and feedback.
+        </p>
+        <div className="flex gap-2 animate-fadeIn delay-100">
           <Button variant="outline" onClick={() => setIsFilterOpen(true)} className="animate-fadeIn delay-150">
             <Filter className="mr-2 h-4 w-4" />
             Filter
@@ -99,6 +165,15 @@ export default function FeedbackPage() {
           </Button>
         </div>
       </div>
+
+      <ExportDialog
+        open={isExportOpen}
+        onOpenChange={setIsExportOpen}
+        onExport={handleExport}
+        onDateChange={handleDateChange}
+        title="Export Feedback"
+        description="Choose the format and date range for your feedback export."
+      />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-slideUp">
         <Card className="animate-fadeIn">
@@ -155,7 +230,7 @@ export default function FeedbackPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 animate-slideUp">
-        <Card className="col-span-4 animate-fadeIn delay-200">
+        <Card className="col-span-7 md:col-span-4 animate-fadeIn delay-200">
           <CardHeader>
             <CardTitle>Recent Feedback</CardTitle>
             <CardDescription>
@@ -167,11 +242,11 @@ export default function FeedbackPage() {
               {recentFeedback.map((feedback, index) => (
                 <div
                   key={feedback.id}
-                  className="flex items-start justify-between p-4 border rounded-lg animate-fadeIn"
+                  className="flex flex-col sm:flex-row sm:items-start justify-between p-4 border rounded-lg animate-fadeIn gap-4"
                   style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-1 flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                       <h4 className="font-medium">{feedback.customerName}</h4>
                       <span className="text-sm text-muted-foreground">
                         {feedback.date}
@@ -184,7 +259,7 @@ export default function FeedbackPage() {
                       {feedback.comment}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 self-end sm:self-start">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -205,7 +280,7 @@ export default function FeedbackPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3 animate-fadeIn delay-250">
+        <Card className="col-span-7 md:col-span-2 lg:col-span-3 animate-fadeIn delay-250">
           <CardHeader>
             <CardTitle>Feedback Trends</CardTitle>
             <CardDescription>
@@ -213,8 +288,10 @@ export default function FeedbackPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] flex items-center justify-center border rounded-lg">
-              <p className="text-muted-foreground">Feedback trends chart will be displayed here</p>
+            <div className="h-[250px] sm:h-[300px] flex items-center justify-center border rounded-lg">
+              <p className="text-xs sm:text-sm md:text-base text-muted-foreground text-center px-2 sm:px-4">
+                Feedback trends chart will be displayed here
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -308,44 +385,6 @@ export default function FeedbackPage() {
                 </label>
               ))}
             </div>
-          </div>
-        </div>
-      </SharedDialog>
-
-      <SharedDialog
-        open={isExportOpen}
-        onOpenChange={setIsExportOpen}
-        title="Export Feedback"
-        description="Choose the format and data range for your export."
-        onSubmit={() => setIsExportOpen(false)}
-        submitText="Export"
-        showCloseButton={true}
-        onClose={handleExportCancel}
-        className="animate-scaleIn"
-      >
-        <div className="grid gap-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="exportFormat">Export Format</Label>
-            <select
-              id="exportFormat"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <option>CSV</option>
-              <option>Excel</option>
-              <option>PDF</option>
-            </select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="exportDateRange">Date Range</Label>
-            <select
-              id="exportDateRange"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <option>Last 7 days</option>
-              <option>Last 30 days</option>
-              <option>Last 90 days</option>
-              <option>Custom Range</option>
-            </select>
           </div>
         </div>
       </SharedDialog>

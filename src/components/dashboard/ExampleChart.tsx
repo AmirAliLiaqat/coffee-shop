@@ -22,7 +22,7 @@ const chartConfig = {
 
 
 export function ExampleChart({ data, title, description, dataKeyX, dataKeyY, fillColor = "hsl(var(--chart-1))" }: ExampleChartProps) {
-  
+
   const dynamicChartConfig = {
     [dataKeyY]: {
       label: dataKeyY.charAt(0).toUpperCase() + dataKeyY.slice(1), // Capitalize first letter
@@ -32,32 +32,41 @@ export function ExampleChart({ data, title, description, dataKeyX, dataKeyY, fil
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="font-headline">{title}</CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
+      <CardHeader className="space-y-1">
+        <CardTitle className="font-headline text-lg sm:text-xl">{title}</CardTitle>
+        {description && <CardDescription className="text-xs sm:text-sm">{description}</CardDescription>}
       </CardHeader>
       <CardContent>
-        <ChartContainer config={dynamicChartConfig} className="h-[300px] w-full">
+        <ChartContainer config={dynamicChartConfig} className="h-[250px] sm:h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+            <BarChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis 
-                dataKey={dataKeyX} 
+              <XAxis
+                dataKey={dataKeyX}
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
-                tickFormatter={(value) => value.slice(0,3)} // Example formatter
+                tickFormatter={(value) => value.slice(0, 3)}
+                fontSize={12}
+                tick={{ fontSize: '0.75rem' }}
               />
-              <YAxis 
+              <YAxis
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
+                fontSize={12}
+                tick={{ fontSize: '0.75rem' }}
               />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
               />
-              <Legend />
+              <Legend
+                wrapperStyle={{
+                  fontSize: '0.75rem',
+                  paddingTop: '0.5rem'
+                }}
+              />
               <Bar dataKey={dataKeyY} fill={fillColor} radius={4} />
             </BarChart>
           </ResponsiveContainer>

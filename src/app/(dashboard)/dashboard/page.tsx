@@ -70,20 +70,20 @@ export default function DashboardPage() {
     <div className="flex flex-col gap-6 animate-fadeIn">
       <h1 className="text-3xl font-bold font-headline animate-slideDown">Dashboard</h1>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-slideUp">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 animate-slideUp">
         <StatCard title="Today's Orders" value="120" icon={ShoppingCart} description="Total orders today" colorClass="text-blue-500" className="animate-fadeIn" />
         <StatCard title="Today's Revenue" value="$1,250" icon={DollarSign} description="+5% from yesterday" colorClass="text-green-500" className="animate-fadeIn delay-75" />
         <StatCard title="Top-Selling Item" value="Latte" icon={TrendingUp} description="Most popular item" className="animate-fadeIn delay-100" />
         <StatCard title="Active Staff" value="5" icon={Users} description="Staff currently on duty" className="animate-fadeIn delay-150" />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 animate-slideUp">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 animate-slideUp">
         <StatCard title="Low Stock Alerts" value="3 Items" icon={AlertTriangle} description="Needs restocking soon" colorClass="text-red-500" className="animate-fadeIn delay-200" />
         <StatCard title="Pending Orders" value="8" icon={Activity} description="Awaiting preparation" colorClass="text-yellow-500" className="animate-fadeIn delay-250" />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2 animate-slideUp">
-        <div className="animate-fadeIn delay-300">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 animate-slideUp">
+        <div className="animate-fadeIn delay-300 w-full">
           {renderChart(
             salesData,
             "Sales Over Time",
@@ -93,7 +93,7 @@ export default function DashboardPage() {
             "hsl(var(--chart-1))"
           )}
         </div>
-        <div className="animate-fadeIn delay-350">
+        <div className="animate-fadeIn delay-350 w-full">
           {renderChart(
             orderVolumeData,
             "Order Volume (Weekly)",
@@ -104,8 +104,8 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
-      <div className="animate-slideUp">
-        <div className="animate-fadeIn delay-400">
+      <div className="animate-slideUp w-full">
+        <div className="animate-fadeIn delay-400 w-full">
           {renderChart(
             peakTimesData,
             "Best Times of Day for Sales",

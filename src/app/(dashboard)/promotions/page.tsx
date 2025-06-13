@@ -5,14 +5,69 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tag, Calendar, Users, TrendingUp } from "lucide-react";
+import { Tag, Calendar, Users, TrendingUp, PlusCircle, X } from "lucide-react";
 import { SharedDialog } from "@/components/ui/shared-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+interface Promotion {
+  id: number;
+  name: string;
+  description: string;
+  type: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  usage: number;
+}
+
+interface NewPromotion {
+  name: string;
+  description: string;
+  type: string;
+  discount: string;
+  startDate: string;
+  endDate: string;
+}
+
+const activePromotions: Promotion[] = [
+  {
+    id: 1,
+    name: "Happy Hour",
+    description: "20% off all drinks from 3-5 PM",
+    type: "Time-based",
+    status: "Active",
+    startDate: "2024-03-01",
+    endDate: "2024-03-31",
+    usage: 234,
+  },
+  {
+    id: 2,
+    name: "Student Discount",
+    description: "15% off with valid student ID",
+    type: "Customer Group",
+    status: "Active",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    usage: 567,
+  },
+  {
+    id: 3,
+    name: "Buy One Get One",
+    description: "Buy any coffee, get one free",
+    type: "Product",
+    status: "Active",
+    startDate: "2024-03-15",
+    endDate: "2024-03-20",
+    usage: 123,
+  },
+];
+
 export default function PromotionsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newPromotion, setNewPromotion] = useState({
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
+  const [selectedPromotion, setSelectedPromotion] = useState<Promotion | null>(null);
+  const [newPromotion, setNewPromotion] = useState<NewPromotion>({
     name: "",
     description: "",
     type: "discount",
@@ -20,39 +75,6 @@ export default function PromotionsPage() {
     startDate: "",
     endDate: "",
   });
-
-  const activePromotions = [
-    {
-      id: 1,
-      name: "Happy Hour",
-      description: "20% off all drinks from 3-5 PM",
-      type: "Time-based",
-      status: "Active",
-      startDate: "2024-03-01",
-      endDate: "2024-03-31",
-      usage: 234,
-    },
-    {
-      id: 2,
-      name: "Student Discount",
-      description: "15% off with valid student ID",
-      type: "Customer Group",
-      status: "Active",
-      startDate: "2024-01-01",
-      endDate: "2024-12-31",
-      usage: 567,
-    },
-    {
-      id: 3,
-      name: "Buy One Get One",
-      description: "Buy any coffee, get one free",
-      type: "Product",
-      status: "Active",
-      startDate: "2024-03-15",
-      endDate: "2024-03-20",
-      usage: 123,
-    },
-  ];
 
   const handleCancel = () => {
     setIsDialogOpen(false);
@@ -67,15 +89,26 @@ export default function PromotionsPage() {
     });
   };
 
+  const handleViewDetails = (promotion: Promotion) => {
+    setSelectedPromotion(promotion);
+    setIsDetailsDialogOpen(true);
+  };
+
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Promotions</h1>
-          <p className="text-muted-foreground animate-fadeIn delay-100">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight animate-slideDown">Promotions</h1>
+          <p className="text-sm sm:text-base text-muted-foreground animate-fadeIn delay-100">
             Manage special offers and discounts for your customers.
           </p>
         </div>
+        <div className="flex gap-2">
+          <Button onClick={() => setIsDialogOpen(true)} className="hover:scale-105 transition-transform duration-200">
+            <PlusCircle className="mr-2 h-4 w-4" /> Create Promotion
+          </Button>
+        </div>
+
         <SharedDialog
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
@@ -84,6 +117,8 @@ export default function PromotionsPage() {
           onSubmit={() => setIsDialogOpen(false)}
           submitText="Create Promotion"
           onClose={handleCancel}
+          size="lg"
+          cancelText="Cancel"
           className="animate-scaleIn"
         >
           <div className="grid gap-4 py-4">
@@ -173,9 +208,9 @@ export default function PromotionsPage() {
             <Tag className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
+            <div className="text-2xl font-bold">{activePromotions.length}</div>
             <p className="text-xs text-muted-foreground">
-              +2 from last week
+              Currently running promotions
             </p>
           </CardContent>
         </Card>
@@ -220,8 +255,8 @@ export default function PromotionsPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 animate-slideUp">
-        <Card className="col-span-4 animate-fadeIn delay-200">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 animate-slideUp">
+        <Card className="col-span-1 lg:col-span-4 animate-fadeIn delay-200">
           <CardHeader>
             <CardTitle>Active Promotions</CardTitle>
             <CardDescription>
@@ -230,38 +265,13 @@ export default function PromotionsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                {
-                  name: "Summer Special",
-                  description: "20% off all iced drinks",
-                  type: "discount",
-                  status: "active",
-                  duration: "Jun 1 - Aug 31",
-                  usage: "234 redemptions",
-                },
-                {
-                  name: "Happy Hour",
-                  description: "Buy one get one free on all drinks",
-                  type: "bogo",
-                  status: "active",
-                  duration: "Daily 2-5 PM",
-                  usage: "567 redemptions",
-                },
-                {
-                  name: "Breakfast Combo",
-                  description: "Coffee + Pastry for $5",
-                  type: "combo",
-                  status: "active",
-                  duration: "Until Aug 15",
-                  usage: "123 redemptions",
-                },
-              ].map((promo, index) => (
+              {activePromotions.map((promo, index) => (
                 <div
-                  key={promo.name}
-                  className="flex items-center justify-between p-4 border rounded-lg animate-fadeIn"
+                  key={promo.id}
+                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg animate-fadeIn"
                   style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
-                  <div className="space-y-1">
+                  <div className="space-y-1 mb-4 sm:mb-0">
                     <h4 className="font-medium">{promo.name}</h4>
                     <p className="text-sm text-muted-foreground">
                       {promo.description}
@@ -271,13 +281,17 @@ export default function PromotionsPage() {
                         {promo.type}
                       </span>
                       <span className="text-muted-foreground">
-                        {promo.duration}
+                        {promo.startDate} - {promo.endDate}
                       </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-medium">{promo.usage}</div>
-                    <Button variant="ghost" size="sm">
+                  <div className="text-left sm:text-right w-full sm:w-auto">
+                    <div className="text-sm font-medium">{promo.usage} redemptions</div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleViewDetails(promo)}
+                    >
                       View Details
                     </Button>
                   </div>
@@ -287,7 +301,7 @@ export default function PromotionsPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3 animate-fadeIn delay-250">
+        <Card className="col-span-1 lg:col-span-3 animate-fadeIn delay-250">
           <CardHeader>
             <CardTitle>Promotion History</CardTitle>
             <CardDescription>
@@ -301,6 +315,49 @@ export default function PromotionsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <SharedDialog
+        open={isDetailsDialogOpen}
+        onOpenChange={setIsDetailsDialogOpen}
+        title={selectedPromotion?.name || "Promotion Details"}
+        description="Promotion details and performance metrics"
+        onSubmit={() => setIsDetailsDialogOpen(false)}
+        submitText="Close"
+        onClose={() => setIsDetailsDialogOpen(false)}
+        size="lg"
+        className="animate-scaleIn"
+      >
+        {selectedPromotion && (
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <p className="text-sm text-muted-foreground">{selectedPromotion.description}</p>
+            </div>
+            <div className="space-y-2">
+              <Label>Type</Label>
+              <p className="text-sm text-muted-foreground">{selectedPromotion.type}</p>
+            </div>
+            <div className="space-y-2">
+              <Label>Status</Label>
+              <p className="text-sm text-muted-foreground">{selectedPromotion.status}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Start Date</Label>
+                <p className="text-sm text-muted-foreground">{selectedPromotion.startDate}</p>
+              </div>
+              <div className="space-y-2">
+                <Label>End Date</Label>
+                <p className="text-sm text-muted-foreground">{selectedPromotion.endDate}</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Total Usage</Label>
+              <p className="text-sm text-muted-foreground">{selectedPromotion.usage} redemptions</p>
+            </div>
+          </div>
+        )}
+      </SharedDialog>
     </div>
   );
 } 

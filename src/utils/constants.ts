@@ -44,7 +44,3 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/ai-assistant", label: "AI Assistant", icon: Bot },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
-
-export const FOOTER_NAV_ITEMS: NavItem[] = [
-  { href: "/logout", label: "Logout", icon: LogOut },
-];

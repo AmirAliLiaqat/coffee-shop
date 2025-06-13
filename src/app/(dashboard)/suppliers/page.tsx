@@ -251,11 +251,11 @@ export default function SuppliersPage() {
               {suppliers.map((supplier, index) => (
                 <div
                   key={supplier.id}
-                  className="flex items-center justify-between p-4 border rounded-lg animate-fadeIn"
+                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg animate-fadeIn gap-4"
                   style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-1 w-full sm:w-auto">
+                    <div className="flex flex-wrap items-center gap-2">
                       <p className="font-medium">{supplier.name}</p>
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${supplier.status === "Active"
@@ -266,7 +266,7 @@ export default function SuppliersPage() {
                         {supplier.status}
                       </span>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Package className="h-4 w-4" />
                         <span>{supplier.type}</span>
@@ -283,7 +283,7 @@ export default function SuppliersPage() {
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                     {supplier.pendingOrders > 0 && (
                       <div className="flex items-center gap-1 text-yellow-600">
                         <AlertCircle className="h-4 w-4" />
@@ -317,12 +317,12 @@ export default function SuppliersPage() {
             {upcomingDeliveries.map((delivery, index) => (
               <div
                 key={delivery.id}
-                className="flex items-center justify-between p-4 border rounded-lg animate-fadeIn"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border rounded-lg animate-fadeIn gap-4"
                 style={{ animationDelay: `${(index + 1) * 100}ms` }}
               >
-                <div className="space-y-1">
+                <div className="space-y-1 w-full sm:w-auto">
                   <p className="font-medium">{delivery.supplier}</p>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Package className="h-4 w-4" />
                       <span>{delivery.items.join(", ")}</span>
@@ -333,7 +333,7 @@ export default function SuppliersPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${delivery.status === "Confirmed"
                       ? "bg-green-100 text-green-700"
@@ -355,6 +355,6 @@ export default function SuppliersPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </div >
   );
 } 

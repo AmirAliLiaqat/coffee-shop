@@ -11,8 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Settings, LogOut, User } from "lucide-react";
-import Link from "next/link";
 import { useSidebar } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 export function UserNav() {
   const { state } = useSidebar();

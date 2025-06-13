@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, BarChart2, PieChart, Users, Package, Loader2 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { DateRangePicker } from "@/components/dashboard/reports/DateRangePicker";
-import type { DateRange } from "react-day-picker";
-import { ExampleChart } from "@/components/dashboard/ExampleChart";
 import * as XLSX from 'xlsx';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { useState, useEffect } from "react";
+import { LucideIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DateRange } from "react-day-picker";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart2, PieChart, Users, Package, Loader2, Download } from "lucide-react";
+import { ExampleChart } from "@/components/dashboard/ExampleChart";
+import { ExportDialog } from "@/components/dashboard/shared/ExportDialog";
+import { exportToPDF } from "@/utils/pdf-export";
 
 interface ChartData {
   item?: string;
@@ -25,6 +24,7 @@ export default function ReportsPage() {
   const [revenueBreakdownData, setRevenueBreakdownData] = useState<ChartData[] | null>(null);
   const [staffPerformanceData, setStaffPerformanceData] = useState<ChartData[] | null>(null);
   const [inventoryUsageData, setInventoryUsageData] = useState<ChartData[] | null>(null);
+  const [isExportOpen, setIsExportOpen] = useState(false);
 
   useEffect(() => {
     setSalesPerItemData([
@@ -58,11 +58,49 @@ export default function ReportsPage() {
     ]);
   }, []);
 
+  const handlePDFExport = () => {
+    if (!salesPerItemData || !revenueBreakdownData || !staffPerformanceData || !inventoryUsageData) return;
 
-  const handleDateChange = (newDateRange: DateRange | undefined) => {
-    setDateRange(newDateRange);
-    // Here you would typically refetch data based on the new dateRange
-    console.log("Selected date range:", newDateRange);
+    exportToPDF({
+      title: "Coffee Shop Reports",
+      subtitle: "Sales & Reports",
+      dateRange: dateRange?.from ? `${dateRange.from.toLocaleDateString()} - ${dateRange.to?.toLocaleDateString() || 'Present'}` : undefined,
+      sections: [
+        {
+          title: "Sales per Item",
+          data: salesPerItemData,
+          columns: [
+            { header: 'Item', dataKey: 'item' },
+            { header: 'Revenue', dataKey: 'revenue' }
+          ]
+        },
+        {
+          title: "Revenue Breakdown",
+          data: revenueBreakdownData,
+          columns: [
+            { header: 'Source', dataKey: 'source' },
+            { header: 'Amount', dataKey: 'amount' }
+          ]
+        },
+        {
+          title: "Staff Performance",
+          data: staffPerformanceData,
+          columns: [
+            { header: 'Staff Member', dataKey: 'item' },
+            { header: 'Sales/Orders', dataKey: 'revenue' }
+          ]
+        },
+        {
+          title: "Inventory Usage Reports",
+          data: inventoryUsageData,
+          columns: [
+            { header: 'Item', dataKey: 'item' },
+            { header: 'Usage', dataKey: 'revenue' }
+          ]
+        }
+      ],
+      filename: "coffee_shop_reports.pdf"
+    });
   };
 
   const exportToExcel = () => {
@@ -91,64 +129,41 @@ export default function ReportsPage() {
     XLSX.writeFile(wb, "coffee_shop_reports.xlsx");
   };
 
-  const exportToPDF = () => {
+  const exportToCSV = () => {
     if (!salesPerItemData || !revenueBreakdownData || !staffPerformanceData || !inventoryUsageData) return;
 
-    const doc = new jsPDF();
+    const csvData = [
+      ...salesPerItemData.map(item => ({ type: 'Sales per Item', ...item })),
+      ...revenueBreakdownData.map(item => ({ type: 'Revenue Breakdown', ...item })),
+      ...staffPerformanceData.map(item => ({ type: 'Staff Performance', ...item })),
+      ...inventoryUsageData.map(item => ({ type: 'Inventory Usage', ...item }))
+    ];
+    const csv = XLSX.utils.json_to_sheet(csvData);
+    const csvContent = XLSX.utils.sheet_to_csv(csv);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'coffee_shop_reports.csv';
+    link.click();
+  };
 
-    // Add title
-    doc.setFontSize(20);
-    doc.text("Coffee Shop Reports", 14, 15);
+  const handleDateChange = (newDateRange: DateRange | undefined) => {
+    setDateRange(newDateRange);
+    console.log("Selected date range:", newDateRange);
+  };
 
-    // Add date range if available
-    if (dateRange?.from) {
-      doc.setFontSize(12);
-      const dateText = `Date Range: ${dateRange.from.toLocaleDateString()} - ${dateRange.to?.toLocaleDateString() || 'Present'}`;
-      doc.text(dateText, 14, 25);
+  const handleExport = (type: 'pdf' | 'excel' | 'csv') => {
+    switch (type) {
+      case 'pdf':
+        handlePDFExport();
+        break;
+      case 'excel':
+        exportToExcel();
+        break;
+      case 'csv':
+        exportToCSV();
+        break;
     }
-
-    // Add Sales per Item table
-    doc.setFontSize(16);
-    doc.text("Sales per Item", 14, 40);
-    const salesData = salesPerItemData.map(item => [item.item || '', item.revenue?.toString() || '']);
-    autoTable(doc, {
-      startY: 45,
-      head: [['Item', 'Revenue']],
-      body: salesData,
-    });
-
-    // Add Revenue Breakdown table
-    doc.setFontSize(16);
-    doc.text("Revenue Breakdown", 14, (doc as any).lastAutoTable.finalY + 20);
-    const revenueData = revenueBreakdownData.map(item => [item.source || '', item.amount?.toString() || '']);
-    autoTable(doc, {
-      startY: (doc as any).lastAutoTable.finalY + 25,
-      head: [['Source', 'Amount']],
-      body: revenueData,
-    });
-
-    // Add Staff Performance table
-    doc.setFontSize(16);
-    doc.text("Staff Performance", 14, (doc as any).lastAutoTable.finalY + 20);
-    const staffData = staffPerformanceData.map(item => [item.item || '', item.revenue?.toString() || '']);
-    autoTable(doc, {
-      startY: (doc as any).lastAutoTable.finalY + 25,
-      head: [['Staff Member', 'Sales/Orders']],
-      body: staffData,
-    });
-
-    // Add Inventory Usage table
-    doc.setFontSize(16);
-    doc.text("Inventory Usage Reports", 14, (doc as any).lastAutoTable.finalY + 20);
-    const inventoryData = inventoryUsageData.map(item => [item.item || '', item.revenue?.toString() || '']);
-    autoTable(doc, {
-      startY: (doc as any).lastAutoTable.finalY + 25,
-      head: [['Item', 'Usage']],
-      body: inventoryData,
-    });
-
-    // Save the PDF
-    doc.save("coffee_shop_reports.pdf");
   };
 
   const renderChart = (data: ChartData[] | null, title: string, description: string, dataKeyX: string, dataKeyY: string, fillColor: string, icon: LucideIcon, delay: number) => {
@@ -191,23 +206,27 @@ export default function ReportsPage() {
     );
   };
 
-
   return (
     <div className="flex flex-col gap-6 animate-fadeIn">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-3xl font-bold font-headline animate-slideDown">Sales &amp; Reports</h1>
         <div className="flex gap-2 animate-fadeIn delay-100">
-          <DateRangePicker onDateChange={handleDateChange} />
-          <Button variant="outline" onClick={exportToPDF} className="hover:scale-105 transition-transform duration-200">
-            <Download className="mr-2 h-4 w-4" /> Export PDF
-          </Button>
-          <Button variant="outline" onClick={exportToExcel} className="hover:scale-105 transition-transform duration-200">
-            <Download className="mr-2 h-4 w-4" /> Export Excel
+          <Button variant="outline" onClick={() => setIsExportOpen(true)} className="hover:scale-105 transition-transform duration-200">
+            <Download className="mr-2 h-4 w-4" /> Export
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <ExportDialog
+        open={isExportOpen}
+        onOpenChange={setIsExportOpen}
+        onExport={handleExport}
+        onDateChange={handleDateChange}
+        title="Export Reports"
+        description="Choose the format and date range for your export."
+      />
+
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {renderChart(
           salesPerItemData,
           "Sales per Item",
@@ -230,7 +249,7 @@ export default function ReportsPage() {
         )}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {renderChart(
           staffPerformanceData,
           "Staff Performance",

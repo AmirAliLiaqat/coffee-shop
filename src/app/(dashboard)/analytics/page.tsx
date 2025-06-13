@@ -26,14 +26,12 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Analytics</h1>
-          <p className="text-muted-foreground animate-fadeIn delay-100">
-            Detailed insights and analytics for your coffee shop business.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Analytics</h1>
+        <p className="text-muted-foreground animate-fadeIn delay-100">
+          Detailed insights and analytics for your coffee shop business.
+        </p>
+        <div className="flex gap-2 animate-fadeIn delay-100">
           <Button variant="outline" onClick={() => setIsFilterOpen(true)} className="animate-fadeIn delay-150">
             <Filter className="mr-2 h-4 w-4" />
             Filter
@@ -186,6 +184,34 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 animate-slideUp">
+        <Card className="col-span-4 lg:col-span-3 animate-fadeIn delay-250">
+          <CardHeader>
+            <CardTitle>Top Selling Items</CardTitle>
+            <CardDescription>
+              Most popular menu items this month
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {['Espresso', 'Cappuccino', 'Latte', 'Cold Brew', 'Croissant'].map((item, index) => (
+                <div
+                  key={item}
+                  className="flex sm:items-center justify-between gap-1 sm:gap-2 animate-fadeIn p-2 rounded-lg hover:bg-muted/50 transition-colors"
+                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />
+                    <span className="text-sm sm:text-base">{item}</span>
+                  </div>
+                  <span className="text-xs sm:text-sm text-muted-foreground">
+                    {Math.floor(Math.random() * 100) + 50} sales
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="col-span-4 animate-fadeIn delay-200">
           <CardHeader>
             <CardTitle>Revenue Overview</CardTitle>
@@ -196,34 +222,6 @@ export default function AnalyticsPage() {
           <CardContent>
             <div className="h-[300px] flex items-center justify-center border rounded-lg">
               <p className="text-muted-foreground">Revenue chart will be displayed here</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="col-span-3 animate-fadeIn delay-250">
-          <CardHeader>
-            <CardTitle>Top Selling Items</CardTitle>
-            <CardDescription>
-              Most popular menu items this month
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {['Espresso', 'Cappuccino', 'Latte', 'Cold Brew', 'Croissant'].map((item, index) => (
-                <div
-                  key={item}
-                  className="flex items-center justify-between animate-fadeIn"
-                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                    <span>{item}</span>
-                  </div>
-                  <span className="text-sm text-muted-foreground">
-                    {Math.floor(Math.random() * 100) + 50} sales
-                  </span>
-                </div>
-              ))}
             </div>
           </CardContent>
         </Card>

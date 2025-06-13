@@ -7,7 +7,7 @@ import { X, CheckCircle2, XCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/utils"
 
 const ToastProvider = ToastPrimitives.Provider
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV_ITEMS, FOOTER_NAV_ITEMS, type NavItem } from "@/lib/constants";
+import { NAV_ITEMS, NavItem } from "@/utils/constants";
 import { Logo } from "@/components/icons/Logo";
 import {
   Sidebar,
@@ -20,7 +20,13 @@ import { UserNav } from "./UserNav";
 
 export function SidebarNav() {
   const pathname = usePathname();
-  const { state } = useSidebar();
+  const { state, setOpenMobile, isMobile } = useSidebar();
+
+  const handleNavClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   const renderNavItem = (item: NavItem, index: number) => (
     <SidebarMenuItem key={`${item.label}-${index}`}>
@@ -29,6 +35,7 @@ export function SidebarNav() {
           isActive={pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))}
           tooltip={item.label}
           aria-label={item.label}
+          onClick={handleNavClick}
         >
           <item.icon />
           {state === "expanded" && <span>{item.label}</span>}
@@ -40,7 +47,7 @@ export function SidebarNav() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-4 flex items-center justify-start group-data-[collapsible=icon]:justify-center">
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/dashboard" className="flex items-center gap-2" onClick={handleNavClick}>
           <Store className="h-7 w-7 text-sidebar-primary flex-shrink-0" />
           {state === "expanded" && <Logo className="h-auto w-32 text-sidebar-foreground" />}
         </Link>
@@ -48,11 +55,9 @@ export function SidebarNav() {
       <SidebarContent className="p-2">
         <SidebarMenu>{NAV_ITEMS.map(renderNavItem)}</SidebarMenu>
       </SidebarContent>
-      <SidebarSeparator />
-      <SidebarFooter className="p-2 space-y-2">
+      <SidebarSeparator className='m-0 p-0' />
+      <SidebarFooter className="p-2">
         <UserNav />
-        <SidebarSeparator />
-        <SidebarMenu>{FOOTER_NAV_ITEMS.map(renderNavItem)}</SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );
