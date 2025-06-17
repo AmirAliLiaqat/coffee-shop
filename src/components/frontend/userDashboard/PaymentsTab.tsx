@@ -1,13 +1,34 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CreditCard } from "lucide-react";
+import { SharedDialog } from "@/components/ui/shared-dialog";
+import { AddPaymentForm } from "./AddPaymentForm";
 
 export const PaymentsTab = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleSubmit = () => {
+    // Handle form submission
+    setIsDialogOpen(false);
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Payment Methods</CardTitle>
-        <Button>Add New Card</Button>
+        <SharedDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title="Add Payment Method"
+          trigger={<Button>Add Payment Method</Button>}
+          onSubmit={handleSubmit}
+          size="lg"
+          showCloseButton={true}
+          onClose={() => setIsDialogOpen(false)}
+        >
+          <AddPaymentForm />
+        </SharedDialog>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">

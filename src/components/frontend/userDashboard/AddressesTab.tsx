@@ -1,12 +1,34 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { SharedDialog } from "@/components/ui/shared-dialog";
+import { AddAddressForm } from "./AddAddressForm";
 
 export const AddressesTab = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleSubmit = () => {
+    // Handle form submission
+    setIsDialogOpen(false);
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Saved Addresses</CardTitle>
-        <Button>Add New Address</Button>
+        <SharedDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          title="Add New Address"
+          submitText="Apply Filters"
+          trigger={<Button>Add New Address</Button>}
+          onSubmit={handleSubmit}
+          size="lg"
+          showCloseButton={true}
+          onClose={() => setIsDialogOpen(false)}
+        >
+          <AddAddressForm />
+        </SharedDialog>
       </CardHeader>
       <CardContent>
         <div className="w-full">
