@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { ShoppingCart, Heart, User, LogOut, Menu, X } from 'lucide-react'
+import { Logo } from '@/components/icons/Logo';
 
 const navigationLinks = [
   { href: '/', label: 'Home' },
@@ -17,7 +18,7 @@ const actionLinks = [
   { href: '/wishlist', icon: Heart, label: 'Wishlist' },
   { href: '/cart', icon: ShoppingCart, label: 'Cart' },
   { href: '/signup', icon: User, label: 'Sign Up' },
-  { href: '/dashboard', icon: LogOut, label: 'Dashboard' },
+  { href: '/userDashboard', icon: LogOut, label: 'Dashboard' },
 ]
 
 const NavLink = ({ href, children, onClick, className = '' }: {
@@ -54,10 +55,8 @@ const Navbar = () => {
       <nav className="bg-primary/90 backdrop-blur-sm py-4 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex-shrink-0">
-              <h1 className="text-2xl md:text-4xl font-headline font-bold text-primary-foreground uppercase tracking-wider">
-                COFFEE SHOP
-              </h1>
+            <Link href="/" className="flex-shrink-0 flex items-center justify-center gap-2">
+              <Logo className="h-auto w-48" variant="navbar" size="lg" />
             </Link>
 
             <MobileMenuButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
@@ -71,7 +70,7 @@ const Navbar = () => {
                   </NavLink>
                 ))}
 
-                <div className="flex items-center space-x-4 ml-4">
+                <div className="flex items-center space-x-4 ml-4 border-l border-primary-foreground/20">
                   {actionLinks.map(({ href, icon: Icon, label }) => (
                     <Link
                       key={href}

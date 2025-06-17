@@ -1,6 +1,5 @@
 "use client";
 
-import * as XLSX from 'xlsx';
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
@@ -9,43 +8,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { SharedDialog } from "@/components/ui/shared-dialog"
 import { ExportDialog } from "@/components/dashboard/shared/ExportDialog";
-import { exportToPDF } from "@/utils/pdf-export";
-
-interface Feedback {
-  id: number;
-  customerName: string;
-  rating: number;
-  comment: string;
-  date: string;
-  sentiment: string;
-}
-
-const recentFeedback = [
-  {
-    id: 1,
-    customerName: "Emily Chen",
-    rating: 5,
-    comment: "The new seasonal latte is amazing! Great atmosphere and friendly staff.",
-    date: "2024-03-15",
-    sentiment: "positive",
-  },
-  {
-    id: 2,
-    customerName: "David Wilson",
-    rating: 4,
-    comment: "Good coffee but the wait time was a bit long during peak hours.",
-    date: "2024-03-14",
-    sentiment: "neutral",
-  },
-  {
-    id: 3,
-    customerName: "Lisa Thompson",
-    rating: 2,
-    comment: "The pastries were stale and the service was slow.",
-    date: "2024-03-13",
-    sentiment: "negative",
-  },
-];
+import { exportFeedbackToPDF } from "@/utils/pdf-export";
+import { exportFeedbackToExcel, exportFeedbackToCSV } from "@/utils/excel-export";
+import { Feedback } from "@/types/dashboard/feedback";
+import { recentFeedback } from "@/mock/dashboard/feedback";
 
 export default function FeedbackPage() {
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
@@ -79,33 +45,6 @@ export default function FeedbackPage() {
     );
   };
 
-  const exportToExcel = (data: any[]) => {
-    // Create a new workbook
-    const wb = XLSX.utils.book_new();
-
-    // Convert data to worksheet
-    const ws = XLSX.utils.json_to_sheet(data);
-
-    // Add the worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, ws, "Customer Feedback");
-
-    // Generate Excel file
-    XLSX.writeFile(wb, "customer_feedback.xlsx");
-  };
-
-  const exportToCSV = (data: any[]) => {
-    // Convert data to CSV
-    const csv = XLSX.utils.json_to_sheet(data);
-    const csvContent = XLSX.utils.sheet_to_csv(csv);
-
-    // Create and trigger download
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'customer_feedback.csv';
-    link.click();
-  };
-
   const handleDateChange = (newDateRange: DateRange | undefined) => {
     console.log('Date range changed:', newDateRange);
   };
@@ -118,31 +57,13 @@ export default function FeedbackPage() {
 
     switch (type) {
       case 'pdf':
-        exportToPDF({
-          title: "Customer Feedback",
-          subtitle: "Customer Feedback Report",
-          dateRange: dateRange,
-          sections: [
-            {
-              title: "Customer Feedback",
-              data: feedbackData,
-              columns: [
-                { header: 'Customer', dataKey: 'customerName' },
-                { header: 'Rating', dataKey: 'rating' },
-                { header: 'Comment', dataKey: 'comment' },
-                { header: 'Date', dataKey: 'date' },
-                { header: 'Sentiment', dataKey: 'sentiment' }
-              ]
-            }
-          ],
-          filename: "customer_feedback.pdf"
-        });
+        exportFeedbackToPDF(feedbackData);
         break;
       case 'excel':
-        exportToExcel(feedbackData);
+        exportFeedbackToExcel(feedbackData);
         break;
       case 'csv':
-        exportToCSV(feedbackData);
+        exportFeedbackToCSV(feedbackData);
         break;
     }
   };

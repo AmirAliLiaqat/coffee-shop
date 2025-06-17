@@ -30,11 +30,11 @@ export default function SignInPage() {
 
   return (
     <>
-      <PageHeader
+      {/* <PageHeader
         title="Sign In"
         pathName="Sign In"
         pathLink="/signin"
-      />
+      /> */}
       <div className="w-full relative">
         <div className="relative min-h-[calc(100vh-400px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-8 animate-fade-in">

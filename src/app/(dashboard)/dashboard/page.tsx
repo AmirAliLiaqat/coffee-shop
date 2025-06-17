@@ -4,15 +4,7 @@ import { useState, useEffect } from 'react';
 import { StatCard } from "@/components/dashboard/StatCard";
 import { ExampleChart } from "@/components/dashboard/ExampleChart";
 import { DollarSign, TrendingUp, Users, AlertTriangle, ShoppingCart, Activity, Loader2 } from "lucide-react";
-
-interface ChartData {
-  month?: string;
-  sales?: number;
-  day?: string;
-  volume?: number;
-  time?: string;
-  orders?: number;
-}
+import { ChartData } from '@/types/dashboard/dashboard';
 
 export default function DashboardPage() {
   const [salesData, setSalesData] = useState<ChartData[] | null>(null);

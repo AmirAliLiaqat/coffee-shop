@@ -1,8 +1,8 @@
 // This is a placeholder for logout functionality.
 // In a real app, this would handle session termination and redirect.
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { LogOut, LayoutDashboard, Home } from "lucide-react";
 
 export default function LogoutPage() {

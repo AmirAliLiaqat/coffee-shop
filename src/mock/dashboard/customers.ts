@@ -1,0 +1,35 @@
+export const customers = [
+  {
+    id: "CUST001",
+    name: "Alice Wonderland",
+    email: "alice@example.com",
+    phone: "555-1111",
+    totalOrders: 15,
+    loyaltyPoints: 150,
+  },
+  {
+    id: "CUST002",
+    name: "Bob The Builder",
+    email: "bob@example.com",
+    phone: "555-2222",
+    totalOrders: 5,
+    loyaltyPoints: 50,
+  },
+  {
+    id: "CUST003",
+    name: "Charlie Brown",
+    email: "charlie@example.com",
+    phone: "555-3333",
+    totalOrders: 25,
+    loyaltyPoints: 250,
+    feedback: "Loves the new cold brew!",
+  },
+  {
+    id: "CUST004",
+    name: "Diana Prince",
+    email: "diana@example.com",
+    phone: "555-4444",
+    totalOrders: 8,
+    loyaltyPoints: 80,
+  },
+];

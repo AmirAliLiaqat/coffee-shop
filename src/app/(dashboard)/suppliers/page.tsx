@@ -3,30 +3,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Truck, Package, DollarSign, Calendar, AlertCircle } from "lucide-react";
 import { SharedDialog } from "@/components/ui/shared-dialog";
 import { AddSupplierForm } from "@/components/dashboard/suppliers/AddSupplierForm";
 import { toast } from "@/components/ui/use-toast";
-
-interface Supplier {
-  id: number;
-  name: string;
-  type: string;
-  status: string;
-  lastOrder: string;
-  nextDelivery: string;
-  pendingOrders: number;
-}
-
-interface Delivery {
-  id: number;
-  supplier: string;
-  items: string[];
-  deliveryDate: string;
-  status: string;
-}
+import { Delivery, Supplier } from "@/types/dashboard/supplier";
+import { suppliers, upcomingDeliveries } from "@/mock/dashboard/supplier";
 
 export default function SuppliersPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -44,53 +27,6 @@ export default function SuppliersPage() {
     notes: "",
   });
 
-  const suppliers = [
-    {
-      id: 1,
-      name: "Coffee Bean Co.",
-      type: "Coffee Beans",
-      status: "Active",
-      lastOrder: "2024-03-10",
-      nextDelivery: "2024-03-25",
-      pendingOrders: 2,
-    },
-    {
-      id: 2,
-      name: "Fresh Dairy Supply",
-      type: "Dairy Products",
-      status: "Active",
-      lastOrder: "2024-03-12",
-      nextDelivery: "2024-03-19",
-      pendingOrders: 1,
-    },
-    {
-      id: 3,
-      name: "Bakery Essentials",
-      type: "Bakery Supplies",
-      status: "Inactive",
-      lastOrder: "2024-02-28",
-      nextDelivery: "N/A",
-      pendingOrders: 0,
-    },
-  ];
-
-  const upcomingDeliveries = [
-    {
-      id: 1,
-      supplier: "Coffee Bean Co.",
-      items: ["Ethiopian Yirgacheffe", "Colombian Supremo"],
-      deliveryDate: "2024-03-25",
-      status: "Confirmed",
-    },
-    {
-      id: 2,
-      supplier: "Fresh Dairy Supply",
-      items: ["Whole Milk", "Heavy Cream"],
-      deliveryDate: "2024-03-19",
-      status: "Pending",
-    },
-  ];
-
   const handleCancel = () => {
     setIsDialogOpen(false);
     setNewSupplier({
@@ -106,7 +42,6 @@ export default function SuppliersPage() {
   };
 
   const handleSubmit = () => {
-    // Handle form submission
     setIsDialogOpen(false);
   };
 

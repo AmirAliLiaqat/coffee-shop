@@ -7,27 +7,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Edit, Trash2, PlusCircle, AlertTriangle, PackagePlus } from "lucide-react";
 import { AddInventoryItemForm } from "@/components/dashboard/inventory/AddInventoryItemForm";
 import { InventoryPredictionForm } from "@/components/dashboard/inventory/InventoryPredictionForm";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SharedDialog } from "@/components/ui/shared-dialog"
-
-interface InventoryItem {
-  id: string;
-  itemName: string;
-  quantity: number;
-  unit: string;
-  supplier?: string;
-  lowStockThreshold?: number;
-}
-
-const initialInventoryItems: InventoryItem[] = [
-  { id: "1", itemName: "Coffee Beans - Espresso Blend", quantity: 20, unit: "kg", supplier: "Pro Roasters", lowStockThreshold: 5 },
-  { id: "2", itemName: "Whole Milk", quantity: 15, unit: "liters", supplier: "Dairy Farm Co.", lowStockThreshold: 3 },
-  { id: "3", itemName: "Croissant Dough - Frozen", quantity: 50, unit: "units", supplier: "Bakery Supplies Inc.", lowStockThreshold: 10 },
-  { id: "4", itemName: "Sugar Syrup - Vanilla", quantity: 5, unit: "bottles", supplier: "Sweet Flavors Ltd.", lowStockThreshold: 1 },
-];
+import { InventoryItem } from "@/types/dashboard/inventory";
+import { initialInventoryItems } from "@/mock/dashboard/inventory";
 
 export default function InventoryPage() {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>(initialInventoryItems);
@@ -36,7 +22,6 @@ export default function InventoryPage() {
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [stockQuantity, setStockQuantity] = useState(1);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
-  const { toast } = useToast();
 
   const handleSubmit = (values: any) => {
     if (editingItem) {

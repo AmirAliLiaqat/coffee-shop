@@ -5,63 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tag, Calendar, Users, TrendingUp, PlusCircle, X } from "lucide-react";
+import { Tag, Calendar, Users, TrendingUp, PlusCircle } from "lucide-react";
 import { SharedDialog } from "@/components/ui/shared-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-interface Promotion {
-  id: number;
-  name: string;
-  description: string;
-  type: string;
-  status: string;
-  startDate: string;
-  endDate: string;
-  usage: number;
-}
-
-interface NewPromotion {
-  name: string;
-  description: string;
-  type: string;
-  discount: string;
-  startDate: string;
-  endDate: string;
-}
-
-const activePromotions: Promotion[] = [
-  {
-    id: 1,
-    name: "Happy Hour",
-    description: "20% off all drinks from 3-5 PM",
-    type: "Time-based",
-    status: "Active",
-    startDate: "2024-03-01",
-    endDate: "2024-03-31",
-    usage: 234,
-  },
-  {
-    id: 2,
-    name: "Student Discount",
-    description: "15% off with valid student ID",
-    type: "Customer Group",
-    status: "Active",
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-    usage: 567,
-  },
-  {
-    id: 3,
-    name: "Buy One Get One",
-    description: "Buy any coffee, get one free",
-    type: "Product",
-    status: "Active",
-    startDate: "2024-03-15",
-    endDate: "2024-03-20",
-    usage: 123,
-  },
-];
+import { NewPromotion, Promotion } from "@/types/dashboard/promotion";
+import { activePromotions } from "@/mock/dashboard/promotion";
 
 export default function PromotionsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -78,7 +27,6 @@ export default function PromotionsPage() {
 
   const handleCancel = () => {
     setIsDialogOpen(false);
-    // Reset form
     setNewPromotion({
       name: "",
       description: "",

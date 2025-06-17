@@ -48,8 +48,7 @@ export function SidebarNav() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-4 flex items-center justify-start group-data-[collapsible=icon]:justify-center">
         <Link href="/dashboard" className="flex items-center gap-2" onClick={handleNavClick}>
-          <Store className="h-7 w-7 text-sidebar-primary flex-shrink-0" />
-          {state === "expanded" && <Logo className="h-auto w-32 text-sidebar-foreground" />}
+          {state === "expanded" && <Logo className="h-auto w-32" variant="sidebar" size="md" />}
         </Link>
       </SidebarHeader>
       <SidebarContent className="p-2">

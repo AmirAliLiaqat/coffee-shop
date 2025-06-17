@@ -1,6 +1,5 @@
 "use client";
 
-import * as XLSX from 'xlsx';
 import { useState, useEffect } from "react";
 import { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,14 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { BarChart2, PieChart, Users, Package, Loader2, Download } from "lucide-react";
 import { ExampleChart } from "@/components/dashboard/ExampleChart";
 import { ExportDialog } from "@/components/dashboard/shared/ExportDialog";
-import { exportToPDF } from "@/utils/pdf-export";
-
-interface ChartData {
-  item?: string;
-  revenue?: number;
-  source?: string;
-  amount?: number;
-}
+import { exportReportToPDF } from "@/utils/pdf-export";
+import { exportReportToExcel, exportReportToCSV } from "@/utils/excel-export";
+import { ChartData } from "@/types/dashboard/chart";
 
 export default function ReportsPage() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
@@ -58,112 +52,23 @@ export default function ReportsPage() {
     ]);
   }, []);
 
-  const handlePDFExport = () => {
-    if (!salesPerItemData || !revenueBreakdownData || !staffPerformanceData || !inventoryUsageData) return;
-
-    exportToPDF({
-      title: "Coffee Shop Reports",
-      subtitle: "Sales & Reports",
-      dateRange: dateRange?.from ? `${dateRange.from.toLocaleDateString()} - ${dateRange.to?.toLocaleDateString() || 'Present'}` : undefined,
-      sections: [
-        {
-          title: "Sales per Item",
-          data: salesPerItemData,
-          columns: [
-            { header: 'Item', dataKey: 'item' },
-            { header: 'Revenue', dataKey: 'revenue' }
-          ]
-        },
-        {
-          title: "Revenue Breakdown",
-          data: revenueBreakdownData,
-          columns: [
-            { header: 'Source', dataKey: 'source' },
-            { header: 'Amount', dataKey: 'amount' }
-          ]
-        },
-        {
-          title: "Staff Performance",
-          data: staffPerformanceData,
-          columns: [
-            { header: 'Staff Member', dataKey: 'item' },
-            { header: 'Sales/Orders', dataKey: 'revenue' }
-          ]
-        },
-        {
-          title: "Inventory Usage Reports",
-          data: inventoryUsageData,
-          columns: [
-            { header: 'Item', dataKey: 'item' },
-            { header: 'Usage', dataKey: 'revenue' }
-          ]
-        }
-      ],
-      filename: "coffee_shop_reports.pdf"
-    });
-  };
-
-  const exportToExcel = () => {
-    if (!salesPerItemData || !revenueBreakdownData || !staffPerformanceData || !inventoryUsageData) return;
-
-    // Create a new workbook
-    const wb = XLSX.utils.book_new();
-
-    // Convert sales per item data to worksheet
-    const salesWS = XLSX.utils.json_to_sheet(salesPerItemData);
-    XLSX.utils.book_append_sheet(wb, salesWS, "Sales per Item");
-
-    // Convert revenue breakdown data to worksheet
-    const revenueWS = XLSX.utils.json_to_sheet(revenueBreakdownData);
-    XLSX.utils.book_append_sheet(wb, revenueWS, "Revenue Breakdown");
-
-    // Convert staff performance data to worksheet
-    const staffWS = XLSX.utils.json_to_sheet(staffPerformanceData);
-    XLSX.utils.book_append_sheet(wb, staffWS, "Staff Performance");
-
-    // Convert inventory usage data to worksheet
-    const inventoryWS = XLSX.utils.json_to_sheet(inventoryUsageData);
-    XLSX.utils.book_append_sheet(wb, inventoryWS, "Inventory Usage");
-
-    // Generate Excel file
-    XLSX.writeFile(wb, "coffee_shop_reports.xlsx");
-  };
-
-  const exportToCSV = () => {
-    if (!salesPerItemData || !revenueBreakdownData || !staffPerformanceData || !inventoryUsageData) return;
-
-    const csvData = [
-      ...salesPerItemData.map(item => ({ type: 'Sales per Item', ...item })),
-      ...revenueBreakdownData.map(item => ({ type: 'Revenue Breakdown', ...item })),
-      ...staffPerformanceData.map(item => ({ type: 'Staff Performance', ...item })),
-      ...inventoryUsageData.map(item => ({ type: 'Inventory Usage', ...item }))
-    ];
-    const csv = XLSX.utils.json_to_sheet(csvData);
-    const csvContent = XLSX.utils.sheet_to_csv(csv);
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'coffee_shop_reports.csv';
-    link.click();
+  const handleExport = (type: 'pdf' | 'excel' | 'csv') => {
+    switch (type) {
+      case 'pdf':
+        exportReportToPDF(salesPerItemData!, revenueBreakdownData!, staffPerformanceData!, inventoryUsageData!);
+        break;
+      case 'excel':
+        exportReportToExcel(salesPerItemData!, revenueBreakdownData!, staffPerformanceData!, inventoryUsageData!);
+        break;
+      case 'csv':
+        exportReportToCSV(salesPerItemData!, revenueBreakdownData!, staffPerformanceData!, inventoryUsageData!);
+        break;
+    }
   };
 
   const handleDateChange = (newDateRange: DateRange | undefined) => {
     setDateRange(newDateRange);
     console.log("Selected date range:", newDateRange);
-  };
-
-  const handleExport = (type: 'pdf' | 'excel' | 'csv') => {
-    switch (type) {
-      case 'pdf':
-        handlePDFExport();
-        break;
-      case 'excel':
-        exportToExcel();
-        break;
-      case 'csv':
-        exportToCSV();
-        break;
-    }
   };
 
   const renderChart = (data: ChartData[] | null, title: string, description: string, dataKeyX: string, dataKeyY: string, fillColor: string, icon: LucideIcon, delay: number) => {

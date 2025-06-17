@@ -20,17 +20,15 @@ export default function AnalyticsPage() {
     setDateRange("This Month");
   };
 
-  const handleExportCancel = () => {
-    setIsExportOpen(false);
-  };
-
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Analytics</h1>
-        <p className="text-muted-foreground animate-fadeIn delay-100">
-          Detailed insights and analytics for your coffee shop business.
-        </p>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Analytics</h1>
+          <p className="text-muted-foreground animate-fadeIn delay-100">
+            Detailed insights and analytics for your coffee shop business.
+          </p>
+        </div>
         <div className="flex gap-2 animate-fadeIn delay-100">
           <Button variant="outline" onClick={() => setIsFilterOpen(true)} className="animate-fadeIn delay-150">
             <Filter className="mr-2 h-4 w-4" />

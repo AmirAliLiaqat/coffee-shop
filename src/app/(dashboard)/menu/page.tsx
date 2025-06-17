@@ -8,27 +8,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Switch } from "@/components/ui/switch";
 import { Edit, Trash2, PlusCircle, LayoutGrid, List } from "lucide-react";
 import { AddMenuItemForm } from "@/components/dashboard/menu/AddMenuItemForm";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { SharedDialog } from "@/components/ui/shared-dialog"
+import { MenuItem } from "@/types/dashboard/menu";
+import { initialMenuItems } from "@/mock/dashboard/menu";
 
-interface MenuItem {
-  id: string;
-  imageUrl?: string;
-  name: string;
-  category: string;
-  price: number;
-  available: boolean;
-  description?: string;
-  dataAiHint?: string;
-}
-
-const initialMenuItems: MenuItem[] = [
-  { id: "1", imageUrl: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=150&h=150&fit=crop", name: "Espresso", category: "Hot Drinks", price: 3.00, available: true, description: "Strong black coffee.", dataAiHint: "espresso coffee" },
-  { id: "2", imageUrl: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=150&h=150&fit=crop", name: "Croissant", category: "Pastries", price: 2.50, available: true, description: "Buttery and flaky.", dataAiHint: "croissant pastry" },
-  { id: "3", imageUrl: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=150&h=150&fit=crop", name: "Iced Latte", category: "Cold Drinks", price: 4.50, available: false, description: "Chilled latte with milk.", dataAiHint: "iced latte" },
-  { id: "4", imageUrl: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=150&h=150&fit=crop", name: "Chicken Sandwich", category: "Sandwiches", price: 7.00, available: true, description: "Grilled chicken with lettuce and tomato.", dataAiHint: "chicken sandwich" },
-];
 
 export default function MenuPage() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>(initialMenuItems);

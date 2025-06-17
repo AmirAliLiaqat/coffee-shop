@@ -38,7 +38,6 @@ const Contact = () => {
 
   const onSubmit = (data: ContactFormValues) => {
     console.log(data);
-    // Handle form submission
   };
 
   return (

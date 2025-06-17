@@ -1,0 +1,9 @@
+export { DashboardHeader } from "./DashboardHeader";
+export { DashboardTabs } from "./DashboardTabs";
+export { ProfileTab } from "./ProfileTab";
+export { OrdersTab } from "./OrdersTab";
+export { WishlistTab } from "./WishlistTab";
+export { AddressesTab } from "./AddressesTab";
+export { PaymentsTab } from "./PaymentsTab";
+export { TrackingTab } from "./TrackingTab";
+export { SettingsTab } from "./SettingsTab";

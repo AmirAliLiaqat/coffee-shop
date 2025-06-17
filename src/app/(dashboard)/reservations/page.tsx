@@ -7,42 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar, Clock, Users, Table, PlusCircle } from "lucide-react";
 import { SharedDialog } from "@/components/ui/shared-dialog"
-
-interface Reservation {
-  id: number;
-  customerName: string;
-  partySize: number;
-  time: string;
-  table: string;
-  status: "Confirmed" | "Pending";
-}
-
-const todayReservations = [
-  {
-    id: 1,
-    customerName: "John Smith",
-    partySize: 4,
-    time: "12:30 PM",
-    table: "Table 5",
-    status: "Confirmed",
-  },
-  {
-    id: 2,
-    customerName: "Sarah Johnson",
-    partySize: 2,
-    time: "1:00 PM",
-    table: "Table 3",
-    status: "Confirmed",
-  },
-  {
-    id: 3,
-    customerName: "Michael Brown",
-    partySize: 6,
-    time: "2:00 PM",
-    table: "Table 8",
-    status: "Pending",
-  },
-];
+import { Reservation } from "@/types/dashboard/reservation";
+import { todayReservations } from "@/mock/dashboard/reservation";
 
 export default function ReservationsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
