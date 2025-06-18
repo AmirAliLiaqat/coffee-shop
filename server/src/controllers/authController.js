@@ -6,7 +6,7 @@ import User from "../models/User.js";
 // Signup controller
 const signup = async (req, res) => {
   try {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password, accessCode } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -14,11 +14,25 @@ const signup = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    // Determine role based on access code
+    let userRole = "user"; // Default role
+
+    if (accessCode) {
+      if (accessCode === process.env.ADMIN_CODE) {
+        userRole = "admin";
+      } else if (accessCode === process.env.STAFF_CODE) {
+        userRole = "staff";
+      } else {
+        return res.status(400).json({ message: "Invalid access code" });
+      }
+    }
+
     // Create new user
     const user = new User({
       fullName,
       email,
       password,
+      role: userRole,
     });
 
     await user.save();
@@ -87,7 +101,12 @@ const signin = async (req, res) => {
 const getCurrentUser = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
-    res.json(user);
+    res.json({
+      id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

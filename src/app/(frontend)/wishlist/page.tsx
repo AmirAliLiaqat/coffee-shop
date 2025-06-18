@@ -10,6 +10,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { wishlistService, WishlistItem } from "@/services/wishlist";
 import { cartService } from "@/services/cart";
 import { Loader } from "@/components/ui/loader";
+import { useAuth } from "@/context/AuthContext";
 
 export default function WishlistPage() {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
@@ -17,6 +18,7 @@ export default function WishlistPage() {
   const [authError, setAuthError] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -101,6 +103,21 @@ export default function WishlistPage() {
     : 0;
 
   const renderContent = () => {
+    if (!isAuthenticated || user?.role !== 'user') {
+      return (
+        <div className="text-center py-12 animate-fade-in">
+          <LogIn className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+          <p className="text-xl text-gray-600 mb-4">Please sign in as a user to view your wishlist</p>
+          <Button
+            onClick={() => router.push("/signin")}
+            className="mt-4 animate-bounce"
+          >
+            Sign In
+          </Button>
+        </div>
+      );
+    }
+
     if (authError) {
       return (
         <div className="text-center py-12 animate-fade-in">

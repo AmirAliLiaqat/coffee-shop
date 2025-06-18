@@ -33,7 +33,7 @@ export default function SignInPage() {
           router.push("/dashboard");
           break;
         case "staff":
-          router.push("/dashboard");
+          router.push("/orders");
           break;
         case "user":
           router.push("/userDashboard");

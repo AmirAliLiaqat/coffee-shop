@@ -9,6 +9,7 @@ import { ShoppingCart, Trash2, LogIn } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { cartService, Cart, CartItem } from "@/services/cart";
 import { Loader } from "@/components/ui/loader";
+import { useAuth } from "@/context/AuthContext";
 
 export default function CartPage() {
   const [cart, setCart] = useState<Cart>({ items: [], total: 0 });
@@ -16,10 +17,16 @@ export default function CartPage() {
   const [authError, setAuthError] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
+    if (!isAuthenticated || user?.role !== 'user') {
+      setAuthError(true);
+      setLoading(false);
+      return;
+    }
     fetchCart();
-  }, []);
+  }, [isAuthenticated, user]);
 
   const fetchCart = async () => {
     try {

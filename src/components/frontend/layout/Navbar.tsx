@@ -42,7 +42,7 @@ const MobileMenuButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () =>
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const router = useRouter();
 
   const handleLinkClick = () => setIsOpen(false);
@@ -106,7 +106,7 @@ const Navbar = () => {
                   >
                     <User className="h-5 w-5" />
                   </button>
-                  {isAuthenticated && (
+                  {isAuthenticated && user?.role === 'user' && (
                     <button
                       onClick={handleLogout}
                       className="text-primary-foreground hover:text-primary-foreground/80 p-2 rounded-md transition-all hover:scale-110"
@@ -161,7 +161,7 @@ const Navbar = () => {
                 >
                   <User className="h-5 w-5" />
                 </button>
-                {isAuthenticated && (
+                {isAuthenticated && user?.role === 'user' && (
                   <button
                     onClick={() => {
                       handleLogout();

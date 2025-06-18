@@ -5,42 +5,106 @@ import {
   Warehouse,
   Users,
   UserCircle,
-  LineChart,
   Settings,
-  LogOut,
   BarChart3,
   Tag,
   Calendar,
   MessageSquare,
   Truck,
   Bot,
-  type LucideIcon,
+  FileText,
 } from "lucide-react";
 
-export type NavItem = {
-  href: string;
+export interface NavItem {
   label: string;
-  icon: LucideIcon;
-  group?: string;
-};
+  href: string;
+  icon: any;
+  roles: string[];
+}
 
 export const NAV_ITEMS: NavItem[] = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/menu", label: "Menu Management", icon: Coffee },
-  { href: "/inventory", label: "Inventory", icon: Warehouse },
-  { href: "/staff", label: "Staff Management", icon: Users },
-  { href: "/customers", label: "Customers", icon: UserCircle },
-  { href: "/reservations", label: "Reservations", icon: Calendar },
-  { href: "/promotions", label: "Promotions", icon: Tag },
-  { href: "/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/reports", label: "Sales Reports", icon: LineChart },
-  { href: "/suppliers", label: "Suppliers", icon: Truck },
   {
-    href: "/feedback",
-    label: "Customer Feedback",
-    icon: MessageSquare,
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+    roles: ["admin"],
   },
-  { href: "/ai-assistant", label: "AI Assistant", icon: Bot },
-  { href: "/settings", label: "Settings", icon: Settings },
+  {
+    label: "Staff Management",
+    href: "/staff",
+    icon: Users,
+    roles: ["admin"],
+  },
+  {
+    label: "Analytics",
+    href: "/analytics",
+    icon: BarChart3,
+    roles: ["admin"],
+  },
+  {
+    label: "Reports",
+    href: "/reports",
+    icon: FileText,
+    roles: ["admin"],
+  },
+  {
+    label: "Orders",
+    href: "/orders",
+    icon: ShoppingCart,
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Promotions",
+    href: "/promotions",
+    icon: Tag,
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Feedback",
+    href: "/feedback",
+    icon: MessageSquare,
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Menu Management",
+    href: "/menu",
+    icon: Coffee,
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Inventory",
+    href: "/inventory",
+    icon: Warehouse,
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Customers",
+    href: "/customers",
+    icon: UserCircle,
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Reservations",
+    href: "/reservations",
+    icon: Calendar,
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Suppliers",
+    href: "/suppliers",
+    icon: Truck,
+    roles: ["admin"],
+  },
+  {
+    label: "AI Assistant",
+    href: "/ai-assistant",
+    icon: Bot,
+    roles: ["admin"],
+  },
+  {
+    label: "Settings",
+    href: "/settings",
+    icon: Settings,
+    roles: ["admin", "staff"],
+  },
 ];

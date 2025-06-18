@@ -14,6 +14,7 @@ export default function SignUpPage() {
     email: "",
     password: "",
     confirmPassword: "",
+    accessCode: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ export default function SignUpPage() {
           router.push("/dashboard");
           break;
         case "staff":
-          router.push("/dashboard");
+          router.push("/orders");
           break;
         case "user":
           router.push("/userDashboard");
@@ -154,6 +155,23 @@ export default function SignUpPage() {
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
                       className="hover:scale-[1.02] transition-transform"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="accessCode" className="block text-sm font-medium text-gray-700">
+                    Access Code (Optional)
+                  </label>
+                  <div className="mt-1">
+                    <Input
+                      id="accessCode"
+                      name="accessCode"
+                      type="password"
+                      value={formData.accessCode}
+                      onChange={handleInputChange}
+                      className="hover:scale-[1.02] transition-transform"
+                      placeholder="Enter access code if you have one"
                     />
                   </div>
                 </div>

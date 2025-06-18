@@ -12,13 +12,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Settings, LogOut, User } from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export function UserNav() {
   const { state } = useSidebar();
-  const userName = "Admin User";
-  const userRole = "Manager";
-  const userEmail = "admin@coffeeshop.com";
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/signin');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -32,8 +42,8 @@ export function UserNav() {
           </div>
           {state === "expanded" && (
             <div className="flex flex-col items-start">
-              <span className="text-sm font-medium text-sidebar-muted">{userName}</span>
-              <span className="text-xs text-sidebar-muted">{userRole}</span>
+              <span className="text-sm font-medium text-sidebar-muted">{user?.fullName}</span>
+              <span className="text-xs text-sidebar-muted capitalize">{user?.role}</span>
             </div>
           )}
         </Button>
@@ -41,29 +51,29 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{userName}</p>
+            <p className="text-sm font-medium leading-none">{user?.fullName}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {userEmail}
+              {user?.email}
             </p>
-            <p className="text-xs leading-none text-muted-foreground font-medium pt-1">{userRole}</p>
+            <p className="text-xs leading-none text-muted-foreground font-medium pt-1 capitalize">{user?.role}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Link href="/settings" passHref>
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </DropdownMenuItem>
-          </Link>
+          {user?.role === 'admin' && (
+            <Link href="/dashboard/settings" passHref>
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+            </Link>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <Link href="/logout" passHref>
-          <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Log out</span>
-          </DropdownMenuItem>
-        </Link>
+        <DropdownMenuItem onClick={handleLogout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
