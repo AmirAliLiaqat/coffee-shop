@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -10,38 +10,74 @@ import { Edit, Trash2, PlusCircle, LayoutGrid, List } from "lucide-react";
 import { AddMenuItemForm } from "@/components/dashboard/menu/AddMenuItemForm";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { SharedDialog } from "@/components/ui/shared-dialog"
-import { MenuItem } from "@/types/dashboard/menu";
-import { initialMenuItems } from "@/mock/dashboard/menu";
-
+import { SharedDialog } from "@/components/ui/shared-dialog";
+import { productService, Product } from "@/services/product";
 
 export default function MenuPage() {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(initialMenuItems);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+  const [editingItem, setEditingItem] = useState<Product | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  const handleSubmit = (values: any) => {
-    if (editingItem) {
-      setMenuItems(menuItems.map(item => item.id === editingItem.id ? { ...item, ...values } : item));
-      toast({ title: "Item Updated", description: `${values.name} has been updated.` });
-    } else {
-      const newItem = { id: String(Date.now()), ...values };
-      setMenuItems([...menuItems, newItem]);
-      toast({ title: "Item Added", description: `${values.name} has been added to the menu.` });
+  // Fetch products on component mount
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const data = await productService.getAllProducts();
+      setProducts(data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch products",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-    setIsDialogOpen(false);
-    setEditingItem(null);
   };
 
-  const handleDelete = (itemId: string) => {
-    // Add confirmation dialog here if needed
-    setMenuItems(menuItems.filter(item => item.id !== itemId));
-    toast({ title: "Item Deleted", description: "The menu item has been deleted.", variant: "destructive" });
+  const handleSubmit = async (values: any) => {
+    try {
+      if (editingItem) {
+        const updatedProduct = await productService.updateProduct(editingItem._id, values);
+        setProducts(products.map(item => item._id === editingItem._id ? updatedProduct : item));
+        toast({ title: "Item Updated", description: `${values.name} has been updated.` });
+      } else {
+        const newProduct = await productService.createProduct(values);
+        setProducts([...products, newProduct]);
+        toast({ title: "Item Added", description: `${values.name} has been added to the menu.` });
+      }
+      setIsDialogOpen(false);
+      setEditingItem(null);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save the item",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleEdit = (item: MenuItem) => {
+  const handleDelete = async (itemId: string) => {
+    try {
+      await productService.deleteProduct(itemId);
+      setProducts(products.filter(item => item._id !== itemId));
+      toast({ title: "Item Deleted", description: "The menu item has been deleted.", variant: "destructive" });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete the item",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEdit = (item: Product) => {
     setEditingItem(item);
     setIsDialogOpen(true);
   };
@@ -51,11 +87,22 @@ export default function MenuPage() {
     setIsDialogOpen(true);
   };
 
-  const toggleAvailability = (itemId: string) => {
-    setMenuItems(menuItems.map(item =>
-      item.id === itemId ? { ...item, available: !item.available } : item
-    ));
+  const toggleAvailability = async (itemId: string) => {
+    try {
+      const updatedProduct = await productService.toggleAvailability(itemId);
+      setProducts(products.map(item => item._id === itemId ? updatedProduct : item));
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to toggle availability",
+        variant: "destructive",
+      });
+    }
   };
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col gap-6 animate-fadeIn">
@@ -90,8 +137,8 @@ export default function MenuPage() {
 
       {viewMode === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {menuItems.map((item, index) => (
-            <Card key={item.id} className="flex flex-col animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
+          {products.map((item, index) => (
+            <Card key={item._id} className="flex flex-col animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
               <CardHeader className="p-0">
                 <Image
                   src={item.imageUrl || "https://placehold.co/300x200.png"}
@@ -99,7 +146,7 @@ export default function MenuPage() {
                   width={300}
                   height={200}
                   className="rounded-t-lg w-full object-cover aspect-[3/2] hover:scale-105 transition-transform duration-300"
-                  data-ai-hint={(item as any).dataAiHint || "food drink"}
+                  data-ai-hint={item.dataAiHint || "food drink"}
                 />
               </CardHeader>
               <CardContent className="pt-4 flex-grow">
@@ -110,11 +157,11 @@ export default function MenuPage() {
               </CardContent>
               <CardFooter className="flex flex-col items-start gap-2 pt-4">
                 <div className="flex items-center space-x-2 w-full justify-between">
-                  <label htmlFor={`available-${item.id}`} className="text-sm font-medium">Available</label>
+                  <label htmlFor={`available-${item._id}`} className="text-sm font-medium">Available</label>
                   <Switch
-                    id={`available-${item.id}`}
+                    id={`available-${item._id}`}
                     checked={item.available}
-                    onCheckedChange={() => toggleAvailability(item.id)}
+                    onCheckedChange={() => toggleAvailability(item._id)}
                     aria-label={`Toggle availability for ${item.name}`}
                   />
                 </div>
@@ -122,7 +169,7 @@ export default function MenuPage() {
                   <Button variant="outline" size="sm" onClick={() => handleEdit(item)} className="flex-1 hover:scale-105 transition-transform duration-200">
                     <Edit className="mr-2 h-4 w-4" /> Edit
                   </Button>
-                  <Button variant="destructive" size="sm" onClick={() => handleDelete(item.id)} className="flex-1 hover:scale-105 transition-transform duration-200">
+                  <Button variant="destructive" size="sm" onClick={() => handleDelete(item._id)} className="flex-1 hover:scale-105 transition-transform duration-200">
                     <Trash2 className="mr-2 h-4 w-4" /> Delete
                   </Button>
                 </div>
@@ -145,8 +192,8 @@ export default function MenuPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {menuItems.map((item, index) => (
-                  <TableRow key={item.id} className="animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
+                {products.map((item, index) => (
+                  <TableRow key={item._id} className="animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
                     <TableCell>
                       <Image
                         src={item.imageUrl || "https://placehold.co/64x64.png"}
@@ -154,7 +201,7 @@ export default function MenuPage() {
                         width={64}
                         height={64}
                         className="rounded-md object-cover aspect-square hover:scale-110 transition-transform duration-300"
-                        data-ai-hint={(item as any).dataAiHint || "food drink"}
+                        data-ai-hint={item.dataAiHint || "food drink"}
                       />
                     </TableCell>
                     <TableCell className="font-medium">{item.name}</TableCell>
@@ -163,7 +210,7 @@ export default function MenuPage() {
                     <TableCell>
                       <Switch
                         checked={item.available}
-                        onCheckedChange={() => toggleAvailability(item.id)}
+                        onCheckedChange={() => toggleAvailability(item._id)}
                         aria-label={`Toggle availability for ${item.name}`}
                       />
                     </TableCell>
@@ -172,7 +219,7 @@ export default function MenuPage() {
                         <Button variant="outline" size="icon" onClick={() => handleEdit(item)} aria-label="Edit item" className="hover:scale-110 transition-transform duration-200">
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="destructive" size="icon" onClick={() => handleDelete(item.id)} aria-label="Delete item" className="hover:scale-110 transition-transform duration-200">
+                        <Button variant="destructive" size="icon" onClick={() => handleDelete(item._id)} aria-label="Delete item" className="hover:scale-110 transition-transform duration-200">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>

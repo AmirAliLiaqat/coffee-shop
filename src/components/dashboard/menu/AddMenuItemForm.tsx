@@ -21,6 +21,7 @@ import { DialogFooter } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useState } from "react";
 import { UploadCloud } from "lucide-react";
+import { CreateProductData } from "@/services/product";
 
 const menuItemSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -39,8 +40,8 @@ const menuItemSchema = z.object({
 type MenuItemFormValues = z.infer<typeof menuItemSchema>;
 
 interface AddMenuItemFormProps {
-  onSubmit: (values: MenuItemFormValues) => void;
-  defaultValues?: Partial<MenuItemFormValues>;
+  onSubmit: (values: CreateProductData) => void;
+  defaultValues?: Partial<CreateProductData>;
   onClose?: () => void;
 }
 

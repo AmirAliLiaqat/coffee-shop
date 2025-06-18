@@ -3,34 +3,65 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, Package, Truck, Home } from "lucide-react";
-
-interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
+import { useToast } from "@/components/ui/use-toast";
+import { orderService, Order } from "@/services/orders";
+import { Loader } from "@/components/ui/loader";
 
 export default function OrderConfirmationPage() {
-  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-  const [orderNumber, setOrderNumber] = useState("");
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
 
   useEffect(() => {
-    // Generate a random order number
-    setOrderNumber(`ORD-${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
-    
-    // Get the last cart items before they were cleared
-    const lastCart = localStorage.getItem("lastCart");
-    if (lastCart) {
-      setOrderItems(JSON.parse(lastCart));
-    }
-  }, []);
+    const fetchOrder = async () => {
+      const orderId = searchParams.get('orderId');
+      if (!orderId) {
+        router.push('/');
+        return;
+      }
 
-  const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      try {
+        const orderData = await orderService.getOrder(orderId);
+        setOrder(orderData);
+      } catch (error) {
+        console.error('Error fetching order:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load order details. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [searchParams, router, toast]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader size="lg" variant="primary" />
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Order Not Found</h1>
+          <Button onClick={() => router.push('/')}>
+            Return to Home
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -39,17 +70,17 @@ export default function OrderConfirmationPage() {
           <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Confirmed!</h1>
           <p className="text-gray-600">Thank you for your purchase</p>
-          <p className="text-sm text-gray-500 mt-2">Order #{orderNumber}</p>
+          <p className="text-sm text-gray-500 mt-2">Order #{order.id}</p>
         </div>
 
         <Card className="p-6 mb-8 animate-slide-in">
           <h2 className="text-xl font-semibold mb-4">Order Details</h2>
           <div className="space-y-4">
-            {orderItems.map((item) => (
+            {order.items.map((item) => (
               <div key={item.id} className="flex items-center gap-4">
-                <img 
-                  src={item.image} 
-                  alt={item.name} 
+                <img
+                  src={item.image}
+                  alt={item.name}
                   className="w-16 h-16 object-cover rounded-lg"
                 />
                 <div className="flex-1">
@@ -66,9 +97,20 @@ export default function OrderConfirmationPage() {
             <div className="border-t pt-4 mt-4">
               <div className="flex justify-between font-semibold">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>${order.total.toFixed(2)}</span>
               </div>
             </div>
+          </div>
+        </Card>
+
+        <Card className="p-6 mb-8 animate-slide-in">
+          <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
+          <div className="space-y-2">
+            <p><span className="font-medium">Name:</span> {order.shippingAddress.fullName}</p>
+            <p><span className="font-medium">Email:</span> {order.shippingAddress.email}</p>
+            <p><span className="font-medium">Address:</span> {order.shippingAddress.address}</p>
+            <p><span className="font-medium">City:</span> {order.shippingAddress.city}</p>
+            <p><span className="font-medium">Postal Code:</span> {order.shippingAddress.postalCode}</p>
           </div>
         </Card>
 
