@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { orderService, Order } from "@/services/orders";
 import { Loader } from "@/components/ui/loader";
 
-export default function OrderConfirmationPage() {
+function OrderConfirmationContent() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -143,5 +143,17 @@ export default function OrderConfirmationPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OrderConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader size="lg" variant="primary" />
+      </div>
+    }>
+      <OrderConfirmationContent />
+    </Suspense>
   );
 } 
