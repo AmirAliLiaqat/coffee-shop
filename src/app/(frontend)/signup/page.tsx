@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { signup } from "@/services/auth";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -14,18 +15,45 @@ export default function SignUpPage() {
     password: "",
     confirmPassword: "",
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
+      setLoading(false);
       return;
     }
-    // Here you would typically handle user registration
-    // For now, we'll just simulate a successful registration
-    localStorage.setItem("isAuthenticated", "true");
-    router.push("/");
+
+    try {
+      const response = await signup(formData);
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+
+      // Role-based redirection
+      switch (response.user.role) {
+        case "admin":
+          router.push("/dashboard");
+          break;
+        case "staff":
+          router.push("/dashboard");
+          break;
+        case "user":
+          router.push("/userDashboard");
+          break;
+        default:
+          router.push("/");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "An error occurred during sign up");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,6 +79,12 @@ export default function SignUpPage() {
             </div>
 
             <Card className="p-8 animate-slide-in bg-white/90 backdrop-blur-sm">
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+                  {error}
+                </div>
+              )}
+
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
@@ -144,8 +178,9 @@ export default function SignUpPage() {
                   <Button
                     type="submit"
                     className="w-full hover:scale-105 transition-transform"
+                    disabled={loading}
                   >
-                    Create Account
+                    {loading ? "Creating account..." : "Create Account"}
                   </Button>
                 </div>
               </form>

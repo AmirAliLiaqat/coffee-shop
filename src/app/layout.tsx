@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ClientOnlyToaster } from '@/components/dashboard/layout/ClientOnlyToaster';
 import { Inter, Poppins } from "next/font/google";
+import { AuthProvider } from '@/context/AuthContext';
 import './globals.css';
 
 const inter = Inter({
@@ -32,8 +33,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${poppins.variable} ${inter.className}`} suppressHydrationWarning>
-        {children}
-        <ClientOnlyToaster />
+        <AuthProvider>
+          {children}
+          <ClientOnlyToaster />
+        </AuthProvider>
       </body>
     </html>
   );

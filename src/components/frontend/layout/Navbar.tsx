@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { ShoppingCart, Heart, User, LogOut, Menu, X } from 'lucide-react'
 import { Logo } from '@/components/icons/Logo';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const navigationLinks = [
   { href: '/', label: 'Home' },
@@ -12,13 +14,6 @@ const navigationLinks = [
   { href: '/reservation', label: 'Reservation' },
   { href: '/shop', label: 'Shop' },
   { href: '/contact', label: 'Contact' },
-]
-
-const actionLinks = [
-  { href: '/wishlist', icon: Heart, label: 'Wishlist' },
-  { href: '/cart', icon: ShoppingCart, label: 'Cart' },
-  { href: '/signup', icon: User, label: 'Sign Up' },
-  { href: '/userDashboard', icon: LogOut, label: 'Dashboard' },
 ]
 
 const NavLink = ({ href, children, onClick, className = '' }: {
@@ -47,8 +42,27 @@ const MobileMenuButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () =>
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const router = useRouter();
 
   const handleLinkClick = () => setIsOpen(false);
+
+  const handleUserClick = () => {
+    if (isAuthenticated) {
+      router.push('/userDashboard');
+    } else {
+      router.push('/signin');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/home');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <div className="w-full">
@@ -71,16 +85,36 @@ const Navbar = () => {
                 ))}
 
                 <div className="flex items-center space-x-4 ml-4 border-l border-primary-foreground/20">
-                  {actionLinks.map(({ href, icon: Icon, label }) => (
-                    <Link
-                      key={href}
-                      href={href}
+                  <Link
+                    href="/wishlist"
+                    className="text-primary-foreground hover:text-primary-foreground/80 p-2 rounded-md transition-all hover:scale-110"
+                    aria-label="Wishlist"
+                  >
+                    <Heart className="h-5 w-5" />
+                  </Link>
+                  <Link
+                    href="/cart"
+                    className="text-primary-foreground hover:text-primary-foreground/80 p-2 rounded-md transition-all hover:scale-110"
+                    aria-label="Cart"
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                  </Link>
+                  <button
+                    onClick={handleUserClick}
+                    className="text-primary-foreground hover:text-primary-foreground/80 p-2 rounded-md transition-all hover:scale-110"
+                    aria-label={isAuthenticated ? "Dashboard" : "Sign In"}
+                  >
+                    <User className="h-5 w-5" />
+                  </button>
+                  {isAuthenticated && (
+                    <button
+                      onClick={handleLogout}
                       className="text-primary-foreground hover:text-primary-foreground/80 p-2 rounded-md transition-all hover:scale-110"
-                      aria-label={label}
+                      aria-label="Logout"
                     >
-                      <Icon className="h-5 w-5" />
-                    </Link>
-                  ))}
+                      <LogOut className="h-5 w-5" />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -101,17 +135,44 @@ const Navbar = () => {
               ))}
 
               <div className="flex items-center space-x-4 px-3 py-2">
-                {actionLinks.map(({ href, icon: Icon, label }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={handleLinkClick}
+                <Link
+                  href="/wishlist"
+                  onClick={handleLinkClick}
+                  className="text-primary-foreground hover:text-primary-foreground/80 p-2 rounded-md transition-all hover:scale-110"
+                  aria-label="Wishlist"
+                >
+                  <Heart className="h-5 w-5" />
+                </Link>
+                <Link
+                  href="/cart"
+                  onClick={handleLinkClick}
+                  className="text-primary-foreground hover:text-primary-foreground/80 p-2 rounded-md transition-all hover:scale-110"
+                  aria-label="Cart"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                </Link>
+                <button
+                  onClick={() => {
+                    handleUserClick();
+                    handleLinkClick();
+                  }}
+                  className="text-primary-foreground hover:text-primary-foreground/80 p-2 rounded-md transition-all hover:scale-110"
+                  aria-label={isAuthenticated ? "Dashboard" : "Sign In"}
+                >
+                  <User className="h-5 w-5" />
+                </button>
+                {isAuthenticated && (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      handleLinkClick();
+                    }}
                     className="text-primary-foreground hover:text-primary-foreground/80 p-2 rounded-md transition-all hover:scale-110"
-                    aria-label={label}
+                    aria-label="Logout"
                   >
-                    <Icon className="h-5 w-5" />
-                  </Link>
-                ))}
+                    <LogOut className="h-5 w-5" />
+                  </button>
+                )}
               </div>
             </div>
           </div>

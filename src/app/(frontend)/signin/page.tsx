@@ -6,20 +6,46 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { signin } from "@/services/auth";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically handle authentication
-    // For now, we'll just simulate a successful login
-    localStorage.setItem("isAuthenticated", "true");
-    router.push("/");
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await signin(formData);
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+
+      // Role-based redirection
+      switch (response.user.role) {
+        case "admin":
+          router.push("/dashboard");
+          break;
+        case "staff":
+          router.push("/dashboard");
+          break;
+        case "user":
+          router.push("/userDashboard");
+          break;
+        default:
+          router.push("/");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "An error occurred during sign in");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +71,12 @@ export default function SignInPage() {
             </div>
 
             <Card className="p-8 animate-slide-in bg-white/90 backdrop-blur-sm">
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+                  {error}
+                </div>
+              )}
+
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -106,8 +138,9 @@ export default function SignInPage() {
                   <Button
                     type="submit"
                     className="w-full hover:scale-105 transition-transform"
+                    disabled={loading}
                   >
-                    Sign in
+                    {loading ? "Signing in..." : "Sign in"}
                   </Button>
                 </div>
               </form>

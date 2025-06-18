@@ -126,38 +126,43 @@ export default {
             opacity: "1",
           },
         },
-        "slide-in-left": {
+        steam: {
           "0%": {
-            transform: "translateX(-20px)",
-            opacity: "0",
+            transform: "translateY(0) scale(1)",
+            opacity: "0.8",
+          },
+          "50%": {
+            transform: "translateY(-4px) scale(1.2)",
+            opacity: "0.4",
           },
           "100%": {
-            transform: "translateX(0)",
-            opacity: "1",
+            transform: "translateY(-8px) scale(0.8)",
+            opacity: "0",
           },
         },
-        "slide-in-right": {
+        fill: {
           "0%": {
-            transform: "translateX(20px)",
-            opacity: "0",
+            height: "0%",
+          },
+          "50%": {
+            height: "50%",
           },
           "100%": {
-            transform: "translateX(0)",
-            opacity: "1",
+            height: "80%",
           },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        fadeIn: "fadeIn 0.5s ease-out",
-        slideDown: "slideDown 0.5s ease-out",
-        slideUp: "slideUp 0.5s ease-out",
-        scaleIn: "scaleIn 0.3s ease-out",
-        "slide-in-left": "slide-in-left 0.5s ease-out",
-        "slide-in-right": "slide-in-right 0.5s ease-out",
+        fadeIn: "fadeIn 0.2s ease-out",
+        slideDown: "slideDown 0.2s ease-out",
+        slideUp: "slideUp 0.2s ease-out",
+        scaleIn: "scaleIn 0.2s ease-out",
+        steam: "steam 1.5s ease-out infinite",
+        fill: "fill 2s ease-in-out infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 } satisfies Config;
