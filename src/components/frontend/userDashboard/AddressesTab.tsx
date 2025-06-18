@@ -20,9 +20,9 @@ export const AddressesTab = () => {
           open={isDialogOpen}
           onOpenChange={setIsDialogOpen}
           title="Add New Address"
-          submitText="Apply Filters"
           trigger={<Button>Add New Address</Button>}
           onSubmit={handleSubmit}
+          submitText="Add New Address"
           size="lg"
           showCloseButton={true}
           onClose={() => setIsDialogOpen(false)}

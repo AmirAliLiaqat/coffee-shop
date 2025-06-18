@@ -23,6 +23,7 @@ export const PaymentsTab = () => {
           title="Add Payment Method"
           trigger={<Button>Add Payment Method</Button>}
           onSubmit={handleSubmit}
+          submitText="Add Payment Method"
           size="lg"
           showCloseButton={true}
           onClose={() => setIsDialogOpen(false)}

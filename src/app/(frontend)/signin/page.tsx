@@ -1,12 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import PageHeader from "@/components/frontend/layout/PageHeader";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({
@@ -30,11 +29,6 @@ export default function SignInPage() {
 
   return (
     <>
-      {/* <PageHeader
-        title="Sign In"
-        pathName="Sign In"
-        pathLink="/signin"
-      /> */}
       <div className="w-full relative">
         <div className="relative min-h-[calc(100vh-400px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-8 animate-fade-in">

@@ -19,6 +19,9 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'Coffee Shop',
   description: 'Your favorite place for coffee and pastries.',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
