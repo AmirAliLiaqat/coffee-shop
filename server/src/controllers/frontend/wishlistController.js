@@ -1,5 +1,5 @@
-import Wishlist from "../models/Wishlist.js";
-import Product from "../models/Product.js";
+import Wishlist from "../../models/frontend/Wishlist.js";
+import Product from "../../models/dashboard/Product.js";
 
 export const getWishlist = async (req, res) => {
   try {

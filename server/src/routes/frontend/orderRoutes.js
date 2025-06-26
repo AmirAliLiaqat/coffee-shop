@@ -5,8 +5,8 @@ import {
   getOrderById,
   updateOrderStatus,
   cancelOrder,
-} from "../controllers/orderController.js";
-import { auth as authenticate } from "../middleware/auth.js";
+} from "../../controllers/frontend/orderController.js";
+import { auth as authenticate } from "../../middleware/auth.js";
 
 const router = express.Router();
 

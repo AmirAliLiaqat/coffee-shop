@@ -5,8 +5,8 @@ import {
   updateCartItem,
   removeFromCart,
   clearCart,
-} from "../controllers/cartController.js";
-import { auth as authenticate } from "../middleware/auth.js";
+} from "../../controllers/frontend/cartController.js";
+import { auth as authenticate } from "../../middleware/auth.js";
 
 const router = express.Router();
 

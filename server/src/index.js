@@ -3,10 +3,10 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
-import productRoutes from "./routes/productRoutes.js";
-import cartRoutes from "./routes/cartRoutes.js";
-import wishlistRoutes from "./routes/wishlistRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
+import productRoutes from "./routes/dashboard/productRoutes.js";
+import cartRoutes from "./routes/frontend/cartRoutes.js";
+import wishlistRoutes from "./routes/frontend/wishlistRoutes.js";
+import orderRoutes from "./routes/frontend/orderRoutes.js";
 
 dotenv.config();
 

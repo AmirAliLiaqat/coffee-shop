@@ -4,8 +4,8 @@ import {
   addToWishlist,
   removeFromWishlist,
   clearWishlist,
-} from "../controllers/wishlistController.js";
-import { auth as authenticate } from "../middleware/auth.js";
+} from "../../controllers/frontend/wishlistController.js";
+import { auth as authenticate } from "../../middleware/auth.js";
 
 const router = express.Router();
 
