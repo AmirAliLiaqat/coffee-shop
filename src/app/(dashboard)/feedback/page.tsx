@@ -71,10 +71,12 @@ export default function FeedbackPage() {
   return (
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Customer Feedback</h1>
-        <p className="text-muted-foreground animate-fadeIn delay-100">
-          Manage and respond to customer reviews and feedback.
-        </p>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight animate-slideDown">Customer Feedback</h1>
+          <p className="text-muted-foreground animate-fadeIn delay-100">
+            Manage and respond to customer reviews and feedback.
+          </p>
+        </div>                
         <div className="flex gap-2 animate-fadeIn delay-100">
           <Button variant="outline" onClick={() => setIsFilterOpen(true)} className="animate-fadeIn delay-150">
             <Filter className="mr-2 h-4 w-4" />

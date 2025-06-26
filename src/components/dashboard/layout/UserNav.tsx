@@ -61,7 +61,7 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {user?.role === 'admin' && (
-            <Link href="/dashboard/settings" passHref>
+            <Link href="/settings" passHref>
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>

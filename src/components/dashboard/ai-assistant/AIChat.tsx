@@ -5,6 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
+import { askAIAssistant } from "@/services/aiAssistant";
 
 export interface Message {
   role: "user" | "assistant";
@@ -34,24 +35,22 @@ export function AIChat({ className = "", onSendMessage }: AIChatProps) {
       if (onSendMessage) {
         await onSendMessage(input);
       } else {
-        const response = await fetch("/api/ai-assistant", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: input }),
-        });
-
-        const data = await response.json();
+        const aiResponse = await askAIAssistant(input);
         const assistantMessage: Message = {
           role: "assistant",
-          content: data.response,
+          content: aiResponse,
         };
         setMessages((prev) => [...prev, assistantMessage]);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error:", error);
+      let errorMsg = "Sorry, I encountered an error. Please try again.";
+      if (error instanceof Error && error.message) {
+        errorMsg = error.message;
+      }
       const errorMessage: Message = {
         role: "assistant",
-        content: "Sorry, I encountered an error. Please try again.",
+        content: errorMsg,
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
@@ -61,7 +60,7 @@ export function AIChat({ className = "", onSendMessage }: AIChatProps) {
 
   return (
     <div className={`flex flex-col h-full ${className}`}>
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 min-h-0 p-4">
         <div className="space-y-4">
           {messages.map((message, index) => (
             <div
@@ -70,9 +69,9 @@ export function AIChat({ className = "", onSendMessage }: AIChatProps) {
                 }`}
             >
               <div
-                className={`max-w-[80%] rounded-lg p-4 ${message.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted"
+                className={`max-w-[80%] rounded-lg p-4 mb-2 ${message.role === "user"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted"
                   }`}
               >
                 {message.content}

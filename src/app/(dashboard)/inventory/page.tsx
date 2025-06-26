@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Edit, Trash2, PlusCircle, AlertTriangle, PackagePlus } from "lucide-react";
 import { AddInventoryItemForm } from "@/components/dashboard/inventory/AddInventoryItemForm";
-import { InventoryPredictionForm } from "@/components/dashboard/inventory/InventoryPredictionForm";
 import { toast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -179,8 +178,6 @@ export default function InventoryPage() {
           </Table>
         </CardContent>
       </Card>
-
-      <InventoryPredictionForm className="animate-fadeIn delay-300" />
     </div>
   );
 }

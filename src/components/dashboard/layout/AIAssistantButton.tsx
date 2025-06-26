@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Bot } from "lucide-react";
 import { SharedDialog } from "@/components/ui/shared-dialog";
-import { AIChat } from "../chat/AIChat";
+import { AIChat } from "../ai-assistant/AIChat";
 
 export function AIAssistantButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,9 +27,11 @@ export function AIAssistantButton() {
         size="lg"
         showCloseButton={true}
         onClose={() => setIsOpen(false)}
-        className="animate-scaleIn"
+        className="animate-scaleIn flex flex-col"
       >
-        <AIChat className="flex-1" />
+        <div className="h-[50vh]">
+          <AIChat className="flex-1" />
+        </div>
       </SharedDialog>
     </>
   );

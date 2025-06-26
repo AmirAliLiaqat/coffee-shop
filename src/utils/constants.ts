@@ -36,6 +36,12 @@ export const NAV_ITEMS: NavItem[] = [
     roles: ["admin"],
   },
   {
+    label: "Menu Management",
+    href: "/menu",
+    icon: Coffee,
+    roles: ["admin", "staff"],
+  },
+  {
     label: "Analytics",
     href: "/analytics",
     icon: BarChart3,
@@ -63,12 +69,6 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Feedback",
     href: "/feedback",
     icon: MessageSquare,
-    roles: ["admin", "staff"],
-  },
-  {
-    label: "Menu Management",
-    href: "/menu",
-    icon: Coffee,
     roles: ["admin", "staff"],
   },
   {
