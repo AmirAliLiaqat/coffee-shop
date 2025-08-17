@@ -44,9 +44,6 @@ export const productService = {
 
   // Create a new product
   createProduct: async (productData: CreateProductData): Promise<Product> => {
-    console.log("=== PRODUCT SERVICE DEBUG ===");
-    console.log("Input productData:", productData);
-
     const formData = new FormData();
 
     // Add all text fields
@@ -74,16 +71,11 @@ export const productService = {
       formData.append("image", productData.image);
     }
 
-    // Debug: Log FormData contents
-    console.log("=== FORMDATA CONTENTS ===");
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
-
-    console.log("=== SENDING REQUEST ===");
-    const response = await api.post<Product>("/products", formData);
-    console.log("=== RESPONSE ===");
-    console.log("Response:", response.data);
+    const response = await api.post<Product>("/products", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 
@@ -120,7 +112,11 @@ export const productService = {
       formData.append("image", productData.image);
     }
 
-    const response = await api.put<Product>(`/products/${id}`, formData);
+    const response = await api.put<Product>(`/products/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 

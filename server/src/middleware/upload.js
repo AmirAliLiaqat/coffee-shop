@@ -21,27 +21,4 @@ const upload = multer({
   },
 });
 
-// Add debugging middleware
-const uploadWithDebug = (fieldName) => {
-  return (req, res, next) => {
-    console.log("=== MULTER DEBUG ===");
-    console.log("Before multer - req.body:", req.body);
-    console.log("Before multer - req.files:", req.files);
-
-    upload.single(fieldName)(req, res, (err) => {
-      if (err) {
-        console.error("Multer error:", err);
-        return res
-          .status(400)
-          .json({ message: "File upload error: " + err.message });
-      }
-
-      console.log("After multer - req.body:", req.body);
-      console.log("After multer - req.file:", req.file);
-      next();
-    });
-  };
-};
-
-export { uploadWithDebug };
 export default upload;

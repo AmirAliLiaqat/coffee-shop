@@ -7,7 +7,7 @@ import {
   deleteProduct,
   toggleAvailability,
 } from "../../controllers/dashboard/productController.js";
-import { uploadWithDebug } from "../../middleware/upload.js";
+import upload from "../../middleware/upload.js";
 
 const router = express.Router();
 
@@ -18,10 +18,10 @@ router.get("/", getAllProducts);
 router.get("/:id", getProduct);
 
 // Create a new product
-router.post("/", uploadWithDebug("image"), createProduct);
+router.post("/", upload.single("image"), createProduct);
 
 // Update a product
-router.put("/:id", uploadWithDebug("image"), updateProduct);
+router.put("/:id", upload.single("image"), updateProduct);
 
 // Delete a product
 router.delete("/:id", deleteProduct);
