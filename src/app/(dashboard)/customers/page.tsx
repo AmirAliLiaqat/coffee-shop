@@ -119,7 +119,6 @@ export default function CustomersPage() {
         submitText="Send Email"
         showCloseButton={true}
         onClose={() => setIsEmailDialogOpen(false)}
-        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <Textarea
@@ -140,7 +139,7 @@ export default function CustomersPage() {
         submitText="Send Promotion"
         showCloseButton={true}
         onClose={() => setIsPromotionDialogOpen(false)}
-        className="animate-scaleIn"
+       
       >
         <div className="grid gap-4 py-4">
           <Textarea

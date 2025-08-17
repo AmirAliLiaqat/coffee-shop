@@ -1,4 +1,8 @@
 import Product from "../../models/dashboard/Product.js";
+import {
+  uploadImageToCloudinary,
+  deleteImageFromCloudinary,
+} from "../../utils/imageUpload.js";
 
 // Get all products
 export const getAllProducts = async (req, res) => {
@@ -26,18 +30,23 @@ export const getProduct = async (req, res) => {
 // Create a new product
 export const createProduct = async (req, res) => {
   try {
+    let imageUrl = null;
+
+    // Handle image upload if file is present
+    if (req.file) {
+      imageUrl = await uploadImageToCloudinary(req.file);
+    }
+
     const product = new Product({
       name: req.body.name,
       category: req.body.category,
       price: req.body.price,
       description: req.body.description,
-      imageUrl: req.body.imageUrl,
-      available: req.body.available ?? true,
+      imageUrl: imageUrl,
+      available: req.body.available === "true" || req.body.available === true,
       preparationTime: req.body.preparationTime,
       calories: req.body.calories,
       ingredients: req.body.ingredients,
-      dietaryInfo: req.body.dietaryInfo || [],
-      allergens: req.body.allergens || [],
       dataAiHint: req.body.dataAiHint,
     });
 
@@ -62,25 +71,38 @@ export const updateProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Update only the fields that are provided
+    // Handle image upload if new file is present
+    if (req.file) {
+      // Delete old image if it exists
+      if (product.imageUrl) {
+        await deleteImageFromCloudinary(product.imageUrl);
+      }
+      // Upload new image
+      const imageUrl = await uploadImageToCloudinary(req.file);
+      product.imageUrl = imageUrl;
+    }
+
+    // Update other fields
     const updateFields = [
       "name",
       "category",
       "price",
       "description",
-      "imageUrl",
       "available",
       "preparationTime",
       "calories",
       "ingredients",
-      "dietaryInfo",
-      "allergens",
       "dataAiHint",
     ];
 
     updateFields.forEach((field) => {
       if (req.body[field] !== undefined) {
-        product[field] = req.body[field];
+        if (field === "available") {
+          product[field] =
+            req.body[field] === "true" || req.body[field] === true;
+        } else {
+          product[field] = req.body[field];
+        }
       }
     });
 
@@ -103,6 +125,11 @@ export const deleteProduct = async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Delete image from Cloudinary if it exists
+    if (product.imageUrl) {
+      await deleteImageFromCloudinary(product.imageUrl);
     }
 
     await product.deleteOne();

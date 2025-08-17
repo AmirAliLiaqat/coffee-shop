@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { PRODUCT_CATEGORIES_ARRAY } from "../../utils/enums.js";
 
 const productSchema = new mongoose.Schema(
   {
@@ -11,7 +12,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      enum: ["Hot Drinks", "Cold Drinks", "Pastries", "Sandwiches", "Snacks"],
+      enum: PRODUCT_CATEGORIES_ARRAY,
     },
     price: {
       type: Number,
@@ -42,27 +43,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    dietaryInfo: [
-      {
-        type: String,
-        enum: ["Vegetarian", "Vegan", "Gluten-Free", "Dairy-Free", "Nut-Free"],
-      },
-    ],
-    allergens: [
-      {
-        type: String,
-        enum: [
-          "Milk",
-          "Eggs",
-          "Fish",
-          "Shellfish",
-          "Tree Nuts",
-          "Peanuts",
-          "Wheat",
-          "Soy",
-        ],
-      },
-    ],
     dataAiHint: {
       type: String,
       trim: true,

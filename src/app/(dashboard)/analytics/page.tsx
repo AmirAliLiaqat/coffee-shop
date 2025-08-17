@@ -50,7 +50,6 @@ export default function AnalyticsPage() {
         submitText="Apply Filters"
         showCloseButton={true}
         onClose={handleFilterCancel}
-        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
@@ -94,7 +93,6 @@ export default function AnalyticsPage() {
         submitText="Export"
         showCloseButton={true}
         onClose={() => setIsExportOpen(false)}
-        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">

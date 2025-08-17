@@ -67,7 +67,6 @@ export default function PromotionsPage() {
           onClose={handleCancel}
           size="lg"
           cancelText="Cancel"
-          className="animate-scaleIn"
         >
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
@@ -273,7 +272,6 @@ export default function PromotionsPage() {
         submitText="Close"
         onClose={() => setIsDetailsDialogOpen(false)}
         size="lg"
-        className="animate-scaleIn"
       >
         {selectedPromotion && (
           <div className="grid gap-4 py-4">

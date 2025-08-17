@@ -76,7 +76,7 @@ export default function FeedbackPage() {
           <p className="text-muted-foreground animate-fadeIn delay-100">
             Manage and respond to customer reviews and feedback.
           </p>
-        </div>                
+        </div>
         <div className="flex gap-2 animate-fadeIn delay-100">
           <Button variant="outline" onClick={() => setIsFilterOpen(true)} className="animate-fadeIn delay-150">
             <Filter className="mr-2 h-4 w-4" />
@@ -229,7 +229,6 @@ export default function FeedbackPage() {
         submitText="Send Response"
         showCloseButton={true}
         onClose={handleReplyCancel}
-        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
@@ -270,7 +269,6 @@ export default function FeedbackPage() {
         submitText="Apply Filters"
         showCloseButton={true}
         onClose={handleFilterCancel}
-        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">

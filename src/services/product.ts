@@ -11,8 +11,6 @@ export interface Product {
   preparationTime?: number;
   calories?: number;
   ingredients?: string;
-  dietaryInfo: string[];
-  allergens: string[];
   dataAiHint?: string;
   createdAt: string;
   updatedAt: string;
@@ -23,13 +21,11 @@ export interface CreateProductData {
   category: string;
   price: number;
   description?: string;
-  imageUrl?: string;
+  image?: File;
   available?: boolean;
   preparationTime?: number;
   calories?: number;
   ingredients?: string;
-  dietaryInfo?: string[];
-  allergens?: string[];
   dataAiHint?: string;
 }
 
@@ -48,7 +44,46 @@ export const productService = {
 
   // Create a new product
   createProduct: async (productData: CreateProductData): Promise<Product> => {
-    const response = await api.post<Product>("/products", productData);
+    console.log("=== PRODUCT SERVICE DEBUG ===");
+    console.log("Input productData:", productData);
+
+    const formData = new FormData();
+
+    // Add all text fields
+    formData.append("name", productData.name);
+    formData.append("category", productData.category);
+    formData.append("price", productData.price.toString());
+    if (productData.description)
+      formData.append("description", productData.description);
+    if (productData.available !== undefined)
+      formData.append("available", productData.available.toString());
+    if (productData.preparationTime)
+      formData.append(
+        "preparationTime",
+        productData.preparationTime.toString()
+      );
+    if (productData.calories)
+      formData.append("calories", productData.calories.toString());
+    if (productData.ingredients)
+      formData.append("ingredients", productData.ingredients);
+    if (productData.dataAiHint)
+      formData.append("dataAiHint", productData.dataAiHint);
+
+    // Add image file if present
+    if (productData.image) {
+      formData.append("image", productData.image);
+    }
+
+    // Debug: Log FormData contents
+    console.log("=== FORMDATA CONTENTS ===");
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+
+    console.log("=== SENDING REQUEST ===");
+    const response = await api.post<Product>("/products", formData);
+    console.log("=== RESPONSE ===");
+    console.log("Response:", response.data);
     return response.data;
   },
 
@@ -57,7 +92,35 @@ export const productService = {
     id: string,
     productData: Partial<CreateProductData>
   ): Promise<Product> => {
-    const response = await api.put<Product>(`/products/${id}`, productData);
+    const formData = new FormData();
+
+    // Add all text fields
+    if (productData.name) formData.append("name", productData.name);
+    if (productData.category) formData.append("category", productData.category);
+    if (productData.price)
+      formData.append("price", productData.price.toString());
+    if (productData.description)
+      formData.append("description", productData.description);
+    if (productData.available !== undefined)
+      formData.append("available", productData.available.toString());
+    if (productData.preparationTime)
+      formData.append(
+        "preparationTime",
+        productData.preparationTime.toString()
+      );
+    if (productData.calories)
+      formData.append("calories", productData.calories.toString());
+    if (productData.ingredients)
+      formData.append("ingredients", productData.ingredients);
+    if (productData.dataAiHint)
+      formData.append("dataAiHint", productData.dataAiHint);
+
+    // Add image file if present
+    if (productData.image) {
+      formData.append("image", productData.image);
+    }
+
+    const response = await api.put<Product>(`/products/${id}`, formData);
     return response.data;
   },
 

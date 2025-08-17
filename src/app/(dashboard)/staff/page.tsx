@@ -77,7 +77,6 @@ export default function StaffPage() {
         onOpenChange={setIsFormOpen}
         title={editingStaff ? "Edit Staff Member" : "Add New Staff Member"}
         description={editingStaff ? "Update the staff member's details." : "Fill in the details for the new staff member."}
-        className="animate-scaleIn"
       >
         <AddStaffForm
           onSubmit={handleSubmit}

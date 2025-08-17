@@ -88,7 +88,6 @@ export default function InventoryPage() {
         description={editingItem ? "Update the details of the inventory item." : "Fill in the details to add a new item to inventory."}
         size="lg"
         onClose={() => setIsFormOpen(false)}
-        className="animate-scaleIn"
       >
         <AddInventoryItemForm
           onSubmit={handleSubmit}
@@ -104,7 +103,6 @@ export default function InventoryPage() {
         description={`Add stock to ${selectedItem?.itemName}`}
         onSubmit={handleStockUpdate}
         submitText="Add Stock"
-        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4 animate-fadeIn">
           <div className="grid gap-2">

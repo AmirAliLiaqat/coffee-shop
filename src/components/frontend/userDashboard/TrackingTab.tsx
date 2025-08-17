@@ -80,7 +80,6 @@ export const TrackingTab = () => {
           onOpenChange={setIsTrackingModalOpen}
           title={`Tracking Details - Order #${mockTrackingData.orderId}`}
           size="lg"
-          className="animate-scaleIn"
         >
           <div className="space-y-6 py-4">
             <div className="grid grid-cols-2 gap-4">

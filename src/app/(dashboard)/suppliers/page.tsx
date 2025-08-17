@@ -73,7 +73,6 @@ export default function SuppliersPage() {
         onOpenChange={setIsDialogOpen}
         title="Add New Supplier"
         description="Add a new supplier to your vendor list."
-        className="animate-scaleIn"
       >
         <AddSupplierForm
           supplier={newSupplier}
@@ -89,7 +88,6 @@ export default function SuppliersPage() {
         onOpenChange={setIsViewDialogOpen}
         title={selectedSupplier?.name || "Supplier Details"}
         description="View supplier information and history"
-        className="animate-scaleIn"
       >
         {selectedSupplier && (
           <div className="space-y-6">

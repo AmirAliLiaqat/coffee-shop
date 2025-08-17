@@ -114,7 +114,6 @@ export default function OrdersPage() {
         description="Fill in the details to create a new customer order."
         size="lg"
         onClose={() => setIsAddOrderDialogOpen(false)}
-        className="animate-scaleIn"
       >
         <AddOrderForm
           onSubmit={handleAddOrderSubmit}
@@ -130,7 +129,6 @@ export default function OrdersPage() {
         size="lg"
         showCloseButton={true}
         onClose={() => setIsViewOrderDialogOpen(false)}
-        className="animate-scaleIn"
       >
         {selectedOrder && (
           <div className="space-y-3 py-4 animate-fadeIn">
@@ -154,7 +152,6 @@ export default function OrdersPage() {
         submitText="Update Status"
         showCloseButton={true}
         onClose={() => setIsUpdateStatusDialogOpen(false)}
-        className="animate-scaleIn"
       >
         {selectedOrder && (
           <div className="py-4 space-y-4 animate-fadeIn">

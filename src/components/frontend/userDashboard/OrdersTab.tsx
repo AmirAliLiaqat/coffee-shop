@@ -131,7 +131,6 @@ export const OrdersTab = () => {
           setReview("");
           setSelectedOrder(null);
         }}
-        className="animate-scaleIn"
       >
         <div className="grid gap-4 py-4">
           <div className="space-y-2">

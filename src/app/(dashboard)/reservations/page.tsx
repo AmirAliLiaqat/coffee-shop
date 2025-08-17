@@ -80,7 +80,6 @@ export default function ReservationsPage() {
           size="lg"
           showCloseButton={!selectedReservation}
           cancelText="Cancel"
-          className="animate-scaleIn"
         >
           {selectedReservation ? (
             <div className="grid gap-4 py-4">

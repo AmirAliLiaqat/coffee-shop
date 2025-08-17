@@ -42,7 +42,6 @@ export function ExportDialog({
       onSubmit={handleExport}
       submitText="Export"
       showCloseButton={true}
-      className="animate-scaleIn"
     >
       <div className="grid gap-4 py-4">
         <div className="space-y-4">

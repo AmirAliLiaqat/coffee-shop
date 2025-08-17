@@ -108,3 +108,23 @@ export const NAV_ITEMS: NavItem[] = [
     roles: ["admin", "staff"],
   },
 ];
+
+// Product Categories
+export const PRODUCT_CATEGORIES = {
+  HOT_DRINKS: "Hot Drinks",
+  COLD_DRINKS: "Cold Drinks",
+  PASTRIES: "Pastries",
+  SANDWICHES: "Sandwiches",
+  SNACKS: "Snacks",
+} as const;
+
+export const PRODUCT_CATEGORIES_ARRAY = [
+  PRODUCT_CATEGORIES.HOT_DRINKS,
+  PRODUCT_CATEGORIES.COLD_DRINKS,
+  PRODUCT_CATEGORIES.PASTRIES,
+  PRODUCT_CATEGORIES.SANDWICHES,
+  PRODUCT_CATEGORIES.SNACKS,
+] as const;
+
+export type ProductCategory =
+  (typeof PRODUCT_CATEGORIES)[keyof typeof PRODUCT_CATEGORIES];
